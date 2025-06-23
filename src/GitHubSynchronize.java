@@ -273,7 +273,8 @@ public class GitHubSynchronize {
 
 	} // конец метода 4. fileFromWebCreator
 
-	/* 5. мой метод для проверки, есть вообще Инет или нет */
+	/* 5. мой метод для проверки, есть вообще Инет или нет 
+	 * Перенес этот метод в Класс AddressManager */
 
 	public static boolean isInternetAvailable(AddressManager manag) { // начало метода isInternetAvailable
 

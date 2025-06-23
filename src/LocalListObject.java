@@ -3,6 +3,9 @@ import java.awt.Dimension;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,100 +29,48 @@ public class LocalListObject {
 
 	private List<String> FieldList;   // список отсортированный по Полю (Издатели, Мапперы и др.)
 
-	int level; // уровень сортировки
-	int starCode; // наличие введенного кода *_ _
-	int on_off_inet; // наличие интернета, 0 - нет, 1 - есть
+	int level;          // уровень сортировки
+	int starCode;       // наличие введенного кода *_ _
 
-	String fieldName; // для вводимой с клавы доп инфы
+	String fieldName;   // под "издетелей"
 	String searchTrace; // для отслуживания "истории" поиска
-	String key; // то, по чему сортируем список
+	String key;         // то, по чему сортируем список
 
 	///////////////////////////// Конструкторы ////////////////////////////////////////
 
-	/*
-	 * 1. Конструктор для использования при вводе "InetOff" - сильно еще не пробовал
-	 */
+	/* возможно первые 2 Конструктора я удалю */
 
-	LocalListObject() {
-
-		level = 0;
-		starCode = 0;
-		on_off_inet = 0;
-
-		fieldName = "";
-		searchTrace = "All Games";
-		key = "All Games";
-
-		GameList = new ArrayList<GameClass>();
-		FieldList = new ArrayList<String>();
-	}
-
-	/*
-	 * 2. Конструктор для использования при вводе "InetOn" - сильно еще не пробовал
-	 */
-
-	LocalListObject(byte a) {
-
-		level = 0;
-		starCode = 0;
-		on_off_inet = 1;
-
-		fieldName = "";
-		searchTrace = "All Games";
-		key = "All Games";
-
-		GameList = new ArrayList<GameClass>();
-		FieldList = new ArrayList<String>();
-	}
-
-	/*
-	 * 3. Конструктор для формирования Полного Объекта. Использую при первоначальном
-	 * формировании Объекта и при вводе ""
-	 */
+	/* 1. Конструктор для формирования Полного Объекта. Использую при первоначальном
+	 * формировании Объекта, при вводе "", при вкл/выкл Интернета */
 
 	LocalListObject(AddressManager manag) {
 
 		level = 1;
 		starCode = 0;
-		on_off_inet = 0;
 
 		fieldName = "";
 		searchTrace = "All Games";
 		key = "All Games";
 
-		GameList = readGamesFromFile(manag);
 		FieldList = new ArrayList<String>();
+		
+		if (manag.readFrom) {
+
+			GameList = readGamesFromWeb(manag);  // читаем с Инета
+			
+		} else {
+			
+			GameList = readGamesFromFile(manag); // читаем с Компа
+		}
 	}
 
-	/*
-	 * 4. Конструктор использую в InputAnalyse, в дефолтном варианте (когда нет
-	 * совпадений по Полям и др.)
-	 */
-
-	LocalListObject(List<GameClass> a, int b, String c, String d) {
-
-		level = b;
-		starCode = 0;
-		on_off_inet = 0;
-
-		fieldName = "";
-		searchTrace = d;
-		key = c;
-
-		GameList = a;
-		FieldList = new ArrayList<String>();
-	}
-
-	/*
-	 * 5. Конструктор использую в InputAnalyse, когда есть совпадение по Полям
-	 * (creators, mappers, years)
-	 */
+	/* 2. Конструктор использую в InputAnalyse, когда есть совпадение по Полям
+	 * (creators, mappers, years) */
 
 	LocalListObject(List<GameClass> a, String c, String b, int d) {
 
 		level = d;
 		starCode = 0;
-		on_off_inet = 0;
 
 		fieldName = c;
 		searchTrace = b;
@@ -127,6 +78,21 @@ public class LocalListObject {
 
 		GameList = a;
 		FieldList = ServiceMethods.getFieldListNew(a, c);
+	}
+	
+	/* 3. Конструктор использую в методе objectSorting ) */
+
+	LocalListObject(List<GameClass> a, int b, String c, String d) {
+
+		level = b;
+		starCode = 0;
+
+		fieldName = "";
+		searchTrace = d;
+		key = c;
+
+		GameList = a;
+		FieldList = new ArrayList<String>();
 	}
 
 	/* Getter-ы */
@@ -163,10 +129,8 @@ public class LocalListObject {
 		this.key = k;
 	}
 
-	/* 1. Наш метод который будет считывать данные, формировать Коллекцию Игр и
-	  сортировать ее применяя наш Компаратор (это вконце) из Класса MyComp
-	  аргументом на место filename должен передаваться адрес текстового файла
-	  Применяю в Конструкторе №3 */
+	/* 1.1 Наш метод который будет считывать данные (с файла на компе),
+	 * формировать Коллекцию Игр. Применяю в Конструкторе №3 */
 
 	private List<GameClass> readGamesFromFile(AddressManager manag) {
 
@@ -397,6 +361,260 @@ public class LocalListObject {
 
 	} // конец Метода
 
+	/* 1.2 Наш метод который будет считывать данные (с файла на GitHub),
+	 * формировать Коллекцию Игр. Применяю в Конструкторе №3 */
+	
+	private List<GameClass> readGamesFromWeb (AddressManager manag) {
+
+		List<GameClass> games = new ArrayList<>();
+
+		try {
+
+			//String fileUrl = GameClass.webFileAddres; // веб адрес моего текст файла на Git Hub
+
+			String fileUrl = manag.webFileAddress;
+			
+			// Создаем URL объект используя мой адрес
+
+			URL url = new URL(fileUrl);
+
+			// Открываем соединение к URL
+
+			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+
+			connection.setRequestMethod("GET"); // Set the request method to GET
+
+			// Check if the response code is HTTP_OK (200)
+
+			if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+
+				// Create a BufferedReader to read the input stream
+				BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+
+				String line;
+				String result = "";
+				int count = 0;
+
+				// Читаем файл строка за строкой и добавляем строки в наш Список
+
+				while ((line = in.readLine()) != null) {
+
+					// считываем Строку без учета пробелов вначале или вконце
+
+					line = line.trim();
+
+					// если Строка пустая или начинается с // (но не заканчивается на "*/") -
+					// пропускаем ее
+
+					if (line.isEmpty() || (line.startsWith("//") && (!line.endsWith("*/")))) {
+
+						continue;
+					}
+
+					///////////// Блок, реализующий игнорирование кода в /* .... */ /////////////
+
+					if ((line.startsWith("/*")) && (line.endsWith("*/"))) {
+
+						continue;
+					}
+
+					if (line.startsWith("/*")) {
+
+						count = 1;
+						continue;
+					}
+
+					if (((count == 1) && (line.endsWith(","))) ||
+
+							((count == 1) && (line.endsWith(";"))) ||
+
+							((count == 1) && (line.isEmpty())) ||
+
+							((count == 1) && (line.startsWith("//")) && (!line.endsWith("*/")))) {
+
+						continue;
+					}
+
+					if ((count == 1) && (line.endsWith("*/"))) {
+
+						count = 0;
+						continue;
+					}
+
+					///////////////////////////////////////////////////////////////////////////////
+
+					// если Строка кончается на "," значит дальше будет адрес Фотки, надо объеденять
+					// строки
+
+					if (line.endsWith(",")) {
+						result += line.trim() + " ";
+						continue;
+					}
+
+					// если Строка кончается на ";" значит это окончательный конец строки, надо
+					// заканчивать объеденение
+
+					if (line.endsWith(";")) {
+						line = line.substring(0, line.length() - 1); // удаляем эти ;
+						result += line.trim() + " ";
+						line = result;
+						result = "";
+						// continue;
+					}
+
+					/*
+					 * разделяем Строку на подстроки, "," - разделитель и упаковываем их в Массив
+					 * Строк
+					 */
+					/*
+					 * т.е создаем Массив Строк, в котором каждый элемент (каждая строка) это
+					 * значение нашего Поля передаваемое Конструктору. В зависимости от количества
+					 * полей (переменная h), выбирается соответствующий Конструктор, из всего 11
+					 */
+
+					String[] parts = line.split(",");
+
+					int h = parts.length; // переменная для отслеживания количества Полей считанных для одного Объекта.
+
+					// в каждой Подстроке удаляем Пробелы (если были) вначале или вконце
+
+					for (int i = 0; i < h; i++) {
+						parts[i] = parts[i].trim();
+					}
+
+					// если Подстрока начинается с ", удаляем этот символ
+
+					for (int i = 0; i < h; i++) {
+
+						if (parts[i].startsWith("\"")) {
+							parts[i] = parts[i].substring(1);
+						}
+					}
+
+					// если Подстрока кончается на ", удаляем этот символ
+
+					for (int i = 0; i < h; i++) {
+
+						if (parts[i].endsWith("\"")) {
+							parts[i] = parts[i].substring(0, parts[i].length() - 1);
+						}
+					}
+
+					///////////////////////// блок формирования Объектов из считаных строк
+					///////////////////////// ////////////////////
+
+					/*
+					 * в зависимости от количества считанных частей (h) применяем соответствующий
+					 * Конструктор
+					 */
+
+					if (h == 1) {
+
+						String name = parts[0];
+
+						GameClass person = new GameClass(manag, name);
+						games.add(person);
+					}
+
+					else if (h == 2) {
+
+						String name = parts[0];
+						String creator = parts[1];
+
+						GameClass person = new GameClass(manag, name, creator);
+						games.add(person);
+					}
+
+					else if (h == 3) {
+
+						String name = parts[0];
+						String creator = parts[1];
+						String year = parts[2];
+
+						GameClass person = new GameClass(manag, name, creator, year);
+						games.add(person);
+					}
+
+					else if (h == 4) {
+
+						String name = parts[0];
+						String creator = parts[1];
+						String mapper = parts[2];
+						String year = parts[3];
+
+						GameClass person = new GameClass(manag, name, creator, mapper, year);
+						games.add(person);
+					}
+
+					else if (h == 5) {
+
+						String name = parts[0];
+						String creator = parts[1];
+						String mapper = parts[2];
+						String year = parts[3];
+						String comment = parts[4];
+
+						GameClass person = new GameClass(manag, name, creator, mapper, year, comment);
+						games.add(person);
+					}
+
+					/*
+					 * благодаря этому блоку else стало возможно просматривать бесконечное число
+					 * фоток одной игры. Т.е. сколько фоток будет столько и прочитаем
+					 */
+
+					else { // 1 и более кастомных фотки
+
+						String name = parts[0];
+						String creator = parts[1];
+						String mapper = parts[2];
+						String year = parts[3];
+						String comment = parts[4];
+
+						String[] pik = new String[h - 5]; // создаем массив строк для Адресов фоток
+
+						/* заполняем Массив pik только Адресами фоток, считанных из файла */
+
+						for (int i = 5; i < parts.length; i++) {
+
+							pik[i - 5] = manag.photoFolderAddress + parts[i];
+						}
+
+						/* создаем объект используя "универсальный" конструктор */
+
+						GameClass person = new GameClass(manag, name, creator, mapper, year, comment, pik);
+						games.add(person); // добавляем объект в список games
+					}
+
+				} // конец while
+
+				// Close the BufferedReader
+				in.close();
+
+			} else {
+
+				System.out.println("Failed to fetch the file: " + connection.getResponseCode());
+			}
+
+			// Disconnect the connection
+			connection.disconnect();
+
+		} catch (IOException e) {
+
+			// System.out.println("Fuck!");
+			e.printStackTrace();
+		}
+
+		// вызываем Метод sort и передаем ему наш Компаратор, это сортирует нашу
+		// Коллекцию (либо по Алфавиту либо по Году выпуска)
+
+		games.sort(new MyNameCompNew());
+		// games.sort(new MyYearComp());
+
+		return games;
+
+	} // конец единственного Метода readGamesFromWeb
+	
 	/* 2. Метод принимает от пользователя Фразу и обрабатывает ее, выбирая тот или
 	 * иной Конструктор, т.е. формируя объект с новыми данными в полях и новыми
 	 * списками */
@@ -404,12 +622,11 @@ public class LocalListObject {
 	public LocalListObject inputAnalyse(AddressManager manag) {
 
 		/* если список Игр пуст, значит ничего не нашлось, а значит нужно
-		 * обновлять список - используем Конструктор №3 */
+		 * обновлять список - используем Конструктор №1 */
 		
 		if (this.GameList.size()==0) {
-			
-			//LocalListObject list = new LocalListObject(GameClass.fileAddres);
-			LocalListObject list = new LocalListObject(manag);
+
+			LocalListObject list = new LocalListObject(manag); // Констр. №1
 			
 			return list;
 		}
@@ -430,7 +647,7 @@ public class LocalListObject {
 
 		if (key.equals("creators") || (key.equals("издатели"))) {
 
-			/* используем Конструктор № 5 */
+			/* используем Конструктор № 2 */
 			
 			LocalListObject list = new LocalListObject(this.GameList, "creator", searchTrace, level);
 
@@ -441,7 +658,7 @@ public class LocalListObject {
 
 		else if (key.equals("mappers") || (key.equals("мапперы"))) {
 
-			/* используем Конструктор № 5 */
+			/* используем Конструктор № 2 */
 			
 			LocalListObject list = new LocalListObject(this.GameList, "mapper", searchTrace, level);
 
@@ -452,24 +669,25 @@ public class LocalListObject {
 
 		else if (key.equals("years") || (key.equals("года")) || (key.equals("годы"))) {
 
-			/* используем Конструктор № 5 */
+			/* используем Конструктор № 2 */
 			
 			LocalListObject list = new LocalListObject(this.GameList, "year", searchTrace, level);
 
 			return list;
 		}
-
-		/* Следующие 2 условия (4 и 5) заполняют поле on_off_inet, которое дальше будет использоваться
-		 * для отключения либо включения поиска в Инете либо на Компьютере */
 		
-		/* 4. если вводим "InetOff" переменная webOrNot = 1 и как-бы отключаем закачку
-		 * даных из Инета */
+		/* 4. если вводим "InetOff"  */
 
 		else if (key.equals("InetOff")) {
-
-			/* используем Конструктор № 1 */
 			
-			LocalListObject list = new LocalListObject();
+			/* используя метод setReadFrom устанавливаем значение поля readFrom менеджера = false
+			 * и передаем получившийся Менеджер в Конструктор №1 => поиск с Компа */
+			
+			manag = manag.setReadFrom(0);
+			
+			/* используем Констуктор №1 */
+			
+			LocalListObject list = new LocalListObject(manag);
 
 			return list;
 		}
@@ -479,11 +697,14 @@ public class LocalListObject {
 
 		else if (key.equals("InetOn")) {
 
-			byte a = 1;
-
-			/* используем Конструктор № 2 */
+			/* используя метод setReadFrom устанавливаем значение поля readFrom менеджера = true
+			 * и передаем получившийся Менеджер в Конструктор №1 => поиск с Инета */
 			
-			LocalListObject list = new LocalListObject(a);
+			manag = manag.setReadFrom(1);
+			
+			/* используем Конструктор № 1 */
+			
+			LocalListObject list = new LocalListObject(manag);
 
 			return list;
 		}
@@ -492,7 +713,7 @@ public class LocalListObject {
 		
 		else if ( key.equals("") ) {
 
-			/* используем Конструктор № 3 */
+			/* используем Конструктор № 1 */
 			
 			LocalListObject list = new LocalListObject(manag);
 
@@ -617,26 +838,23 @@ public class LocalListObject {
 
 		if (w > 0) {
 
-			// searchTrace = searchTrace + "->" + key;
+			/* используем Конструктор №3 */
 
 			LocalListObject list = new LocalListObject(objectList, level, this.key, searchTrace);
 
 			return list;
 
 		}
+		
 		// если что-то нашлось - возвращаем этот список
 
-		/////////////////////////////////////////////////////////////////////////////////////////////////////
-
-		/////////////////////////////////// Блок поиска непосредственно в Именах
-		/////////////////////////////////// ////////////////////////////
+		///////////////////////////// Блок поиска непосредственно в Именах //////////////////////////
 
 		if (this.key.length() > 0) {
 
 			char n = this.key.charAt(0); // n - первый символ введенного слова
 
-			///////////////////// блок для сортировки по Одной введеной Букве
-			///////////////////// ////////////////////////////
+			///////////////////// блок для сортировки по Одной введеной Букве ////////////////////////
 
 			/*
 			 * если введенное слово - это Один символ и это Буква, то делаем эту букву
@@ -662,6 +880,8 @@ public class LocalListObject {
 
 				if (w > 0) {
 
+					/* используем Конструктор №3 */
+					
 					LocalListObject list = new LocalListObject(objectList, level, this.key, searchTrace);
 
 					return list;
@@ -671,8 +891,7 @@ public class LocalListObject {
 
 				/////////////////////////////////////////////////////////////////////////////////////////////////////
 
-				/////////////////////////////////// если больше одной буквы или символы
-				/////////////////////////////////// /////////////////////////////
+				//////////////////// если больше одной буквы или символы //////////////////////////
 
 			} else {
 
@@ -690,12 +909,14 @@ public class LocalListObject {
 
 				if (w > 0) {
 
+					/* используем Конструктор №3 */
+					
 					LocalListObject list = new LocalListObject(objectList, level, this.key, searchTrace);
 
 					return list;
 
 				}
-				; // если что-то нашлось - возвращаем этот список
+				//; // если что-то нашлось - возвращаем этот список
 
 			}
 
@@ -703,11 +924,13 @@ public class LocalListObject {
 
 		//////////////////////////////////////////////////////////////////////////////////////////////////////
 
+		/* используем Конструктор №3 */
+		
 		LocalListObject list = new LocalListObject(objectList, level, this.key, searchTrace);
 
 		return list;
 
-	} // конец Метода 2_objectSorting
+	} // конец Метода 3. objectSorting
 
 	/* 4. Метод по выводу Списка GameClass в Окно (JOptionPane) со
 	 * Слайдером и возможностью выбора элементов из этого списка Мышью.
@@ -730,6 +953,8 @@ public class LocalListObject {
 			this.GameList.get(this.starCode-1).showPics(manag);
 			
 			this.starCode = 0;
+			
+			/* используем Конструктор №1 */
 			
 			LocalListObject retList = new LocalListObject(manag);
 
@@ -880,6 +1105,8 @@ public class LocalListObject {
 			
 			this.GameList.get(0).showPics(manag);
 			
+			/* используем Конструктор №1 */
+			
 			LocalListObject retList = new LocalListObject(manag);
 
 			return retList;
@@ -913,18 +1140,18 @@ public class LocalListObject {
 			return this;
 		}
 
-	} // конец Метода mouseChooseWindow()
+	} // конец Метода 4. mouseChooseWindow()
 	
 	/* 5. Метод для чека - что содержит наш Оьъект */
 
-	public void getInfo() {
+	public void getInfo(AddressManager manag) {
 		
 		if (this.key.equals("end") ) return;
 
 		String text = "Level: " + level + "\n"
 
 				+ "Key: " + key + "\n" + "fieldName: " + fieldName + "\n" + "searchTrace: " + searchTrace + "\n"
-				+ "starCode: " + starCode + "\n" + "on_off_inet: " + on_off_inet + "\n" + "GameListSize: "
+				+ "starCode: " + starCode + "\n" + "read from Inet: " + manag.readFrom + "\n" + "GameListSize: "
 				+ GameList.size() + "\n" + "FieldListSize: " + FieldList.size() + "\n";
 
 		JTextArea textArea = new JTextArea(text);

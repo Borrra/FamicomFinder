@@ -3,6 +3,8 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -28,6 +30,15 @@ public class AddressManager {
 
 	private int h = 5; // глубина вложения 5: С:/Stuff/Stuff/Stuff/Stuff
 		
+	/* сейчас думаю ввести еще одно поле: boolean и сделать 
+	 * публиный сеттер, по изменению этого значения, котоый буду использовать
+	 * в условиях key.equals("InetOff") и key.equals("InetOn") метода
+	 * inputAnalyse(AddressManager manag) класса LocalListObject */
+	
+	boolean readFrom;
+	
+	boolean isInetHere;
+	
 	String fileAddress;
 	
 	String photoFolderAddress;
@@ -73,6 +84,10 @@ public class AddressManager {
 	
 	AddressManager () {
 		
+		readFrom = false;
+		
+		isInetHere = isInetAvalible ();
+		
 		fileAddress = desktopPath + File.separator + projectFolderName + File.separator + textFileName;
 		
 		photoFolderAddress = desktopPath + File.separator + projectFolderName + File.separator + photoFolderName;
@@ -85,6 +100,10 @@ public class AddressManager {
 	/* 2. Второй Конструктор, когда есть адрес Текст Файла, а адреса Папки с фотками нет */
 	
 	AddressManager (String txtFile, int a) {
+		
+		readFrom = false;
+		
+		isInetHere = isInetAvalible ();
 		
 		fileAddress = txtFile;
 		
@@ -99,6 +118,10 @@ public class AddressManager {
 	
 	AddressManager (int a, String photoAdr) {
 		
+		readFrom = false;
+		
+		isInetHere = isInetAvalible ();
+		
 		fileAddress = "";
 		
 		photoFolderAddress = photoAdr;
@@ -111,6 +134,10 @@ public class AddressManager {
 	/* 4. Четвертый Конструктор, для передачи адреса Текст Файла и адреса Папки с фотками */
 	
 	AddressManager (String txtAdr, String photoAdr) {
+		
+		readFrom = false;
+		
+		isInetHere = isInetAvalible ();
 		
 		fileAddress = txtAdr;
 		
@@ -126,6 +153,10 @@ public class AddressManager {
 	
 	AddressManager (int a) {
 		
+		readFrom = false;
+		
+		isInetHere = isInetAvalible ();
+		
 		fileAddress = "";
 		
 		photoFolderAddress = "";
@@ -134,6 +165,33 @@ public class AddressManager {
 		
 		webFileAddress = webFlAddr;
 	}
+	
+	/* Setters */
+	
+	/* Метод проверяющий наличие Интернета и используемый в Конструкторах для
+	 * заполнения поля isInetHere */
+	
+	private boolean isInetAvalible () {
+
+		try {
+
+			URL url = new URL(this.inetChecking); // передаем адрес Интернет Ресурса
+			HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+			// urlConnection.setDefaultRequestProperty("User-Agent", "Test");
+			// urlConnection.setDefaultRequestProperty("Connection", "close");
+			urlConnection.setConnectTimeout(1000);
+			urlConnection.connect();
+
+			//this.isInetHere = (urlConnection.getResponseCode() == 200);
+			
+			return (urlConnection.getResponseCode() == 200);
+
+		} catch (Exception e) {
+
+			return false;
+		}
+		
+	} // конец Метода 
 	
 	/* 1. Метод определяющий содержится ли одна Строка в Другой или нет */
 	
@@ -375,7 +433,7 @@ public class AddressManager {
 			
 			AddressManager manager = new AddressManager (txtAdr, photoAdr);
 			
-			manager.showManagInfo();
+			//manager.showManagInfo();
 			
 			return manager;
 		}
@@ -397,7 +455,7 @@ public class AddressManager {
 			
 			manager = manager.checkHiddenFile(1); // нужен адрес фоток
 			
-			manager.showManagInfo();
+			//manager.showManagInfo();
 			
 			return manager;
 		}
@@ -419,7 +477,7 @@ public class AddressManager {
 			
 			manager = manager.checkHiddenFile(2); // нужен адрес текст файла
 			
-			manager.showManagInfo();
+			//manager.showManagInfo();
 			
 			return manager;
 		}
@@ -436,7 +494,7 @@ public class AddressManager {
 			
 			manager = manager.checkHiddenFile(0);
 			
-			manager.showManagInfo();
+			//manager.showManagInfo();
 			
 			return manager;
 		}
@@ -500,7 +558,7 @@ public class AddressManager {
 
 						AddressManager manah = new AddressManager (a23[0], a23[1]); // конструктор №4
 						
-						manah.showManagInfo();
+						//manah.showManagInfo();
 						
 						System.out.println("Fist version");
 
@@ -514,7 +572,7 @@ public class AddressManager {
 						
 						System.out.println("Second version");
 
-						manah.showManagInfo();
+						//manah.showManagInfo();
 						
 						return manah;
 					}
@@ -532,7 +590,7 @@ public class AddressManager {
 							
 								//System.out.println("So.. first option"); // потом закоменчу
 
-								manah.showManagInfo();
+								//manah.showManagInfo();
 							
 								return manah;
 							}
@@ -543,7 +601,7 @@ public class AddressManager {
 								
 								//System.out.println("So.. first option"); // потом закоменчу
 
-								manah.showManagInfo();
+								//manah.showManagInfo();
 							
 								return manah;
 							}
@@ -558,7 +616,7 @@ public class AddressManager {
 							
 								//System.out.println("So.. second option"); // потом закоменчу
 							
-								manah.showManagInfo();
+								//manah.showManagInfo();
 							
 								return manah;
 							
@@ -570,7 +628,7 @@ public class AddressManager {
 								
 								//System.out.println("So.. first option"); // потом закоменчу
 
-								manah.showManagInfo();
+								//manah.showManagInfo();
 							
 								return manah;
 							}
@@ -592,7 +650,7 @@ public class AddressManager {
 						
 						System.out.println("i need photos, and in hidden there's two lines");
 
-						manah.showManagInfo();
+						//manah.showManagInfo();
 						
 						return manah;
 					}
@@ -603,7 +661,7 @@ public class AddressManager {
 						
 						System.out.println("i need photos, and in hidden there's two lines");
 
-						manah.showManagInfo();
+						//manah.showManagInfo();
 						
 						return manah;	
 					}
@@ -620,7 +678,7 @@ public class AddressManager {
 						
 						System.out.println("i need text only, and in hidden there's two lines");
 
-						manah.showManagInfo();
+						//manah.showManagInfo();
 						
 						return manah;
 					}
@@ -631,7 +689,7 @@ public class AddressManager {
 						
 						System.out.println("i need text only, and in hidden there's two lines");
 
-						manah.showManagInfo();
+						//manah.showManagInfo();
 						
 						return manah;	
 					}
@@ -647,7 +705,7 @@ public class AddressManager {
 						
 						//System.out.println("Second version");
 
-						manah.showManagInfo();
+						//manah.showManagInfo();
 						
 						return manah;
 					}
@@ -663,7 +721,7 @@ public class AddressManager {
 						
 						//System.out.println("Second version");
 
-						manah.showManagInfo();
+						//manah.showManagInfo();
 						
 						return manah;
 					}
@@ -852,10 +910,11 @@ public class AddressManager {
 
 	} // конец Метода 4.2 compFilesFinder
 
-	/* 7. Единственный метод, используемый в main и комбинирующий 2 главных
+	/* 7. Единственный метод ( не считая showManagInfo () ), используемый в main и комбинирующий 3 главных
 	 * метода данного класса т.е. сначала анализирует Файлы на Рабочем Столе,
 	 * затем Адреса в Скрытом Текст. файле (compFilesAnalyzer()), а затем (если это нужно)
-	 * производит поиск файлов на Компе (compFilesFinder()) */
+	 * производит поиск файлов на Компе (compFilesFinder()) и проверяет наличие Интернета,
+	 * заполняя поле isInetHere */
 	
 	public AddressManager setting () {
 		
@@ -1265,12 +1324,52 @@ public class AddressManager {
 
 	/* 11. Метод служебный, для просмотра содержимого Менеджера */
 	
-	private void showManagInfo () {
+	public void showManagInfo () {
 		
-		String[] ar = new String[] { "Text file: \"" + this.fileAddress + "\"", "Photo:    \"" + this.photoFolderAddress + "\"" };
+		String[] ar = new String[] { "Text file: \"" + this.fileAddress + "\"",
+									 "Photo:    \"" + this.photoFolderAddress + "\"",
+									 "Is Inet here? - \"" + this.isInetHere + "\"",
+									 "reading from Inet: \"" + this.readFrom + "\"" };
 		
 		ServiceMethods.windowShow(ar, "Менеждер содержит адреса: ");
 	}
 	
-
-}
+	/* 12. Метод, который я применяю в методе inputAnalyse класса LocalListObject,
+	 * в условии, когда ввели InetOn или InetOff с клавиатуры, и который меняет
+	 * значение поля AddressManager в зависимости от переданного числа (0 или 1) */
+	
+	public AddressManager setReadFrom (int a) {
+		
+		if (a==0) {
+			
+			this.readFrom = false;
+			
+			return this;
+		}
+		
+		/* если хотим перейти на Инет, нужно чтобы Инет был на компе */
+		
+		else if ( a==1 && this.isInetHere) {
+			
+			this.readFrom = true;
+			
+			return this;
+		}
+		
+		/* хотим перейти на Инет, а инета на компе нет, получим сообщуху */
+		
+		else if ( a==1 && !this.isInetHere ) {
+			
+			this.readFrom = false;
+			
+			ServiceMethods.windowShow("С инетом какая-то хрень!");
+			
+			return this;
+		}
+	
+		/* если ни одно условие не выполненно, возвращается неизменённый менеджер */
+		
+		else return this;	
+	}
+	
+} // конец Класса
