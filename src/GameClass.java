@@ -39,80 +39,126 @@ public class GameClass {
 
 	/////////////////// Конструкторы моего Класса (6 штук) /////////////////////////
 
-	// 1. конструктор, если вводишь только Название (+ 3 дефолтных фотки)
+	/* 1. конструктор, если вводишь только Название (+ 3 дефолтных фотки) */
 
 	public GameClass(AddressManager manag, String name) {
 
+		String currentAdr = "";
+		
+		if (manag.readFrom) {		
+			currentAdr = manag.webPhotoAddress;	
+		} else {	
+			currentAdr = manag.photoFolderAddress;
+		}
+		
 		this.name = name;
 		this.creator = "no name";
 		this.mapper = "unknown";
 		this.year = "19**";
 		this.comment = "stay sharp";
 		this.amount = 3;
-		this.pics = new String[] { manag.photoFolderAddress + addr1, manag.photoFolderAddress + addr2, manag.photoFolderAddress + addr3 };
+		this.pics = new String[] { currentAdr + addr1, currentAdr + addr2, currentAdr + addr3 };
 	}
 
-	// 2. конструктор, если вводишь Название и Издателя (+ 3 дефолтных фотки)
+	/* 2. конструктор, если вводишь Название и Издателя (+ 3 дефолтных фотки) */
 
 	public GameClass(AddressManager manag, String name, String creator) {
 
+		String currentAdr = "";
+		
+		if (manag.readFrom) {		
+			currentAdr = manag.webPhotoAddress;	
+		} else {	
+			currentAdr = manag.photoFolderAddress;
+		}
+		
 		this.name = name;
 		this.creator = creator;
 		this.mapper = "unknown";
 		this.year = "19**";
 		this.comment = "stay sharp";
 		this.amount = 3;
-		this.pics = new String[] { manag.photoFolderAddress + addr1, manag.photoFolderAddress + addr2, manag.photoFolderAddress + addr3 };
+		this.pics = new String[] { currentAdr + addr1, currentAdr + addr2, currentAdr + addr3 };
 	}
 
 	// 3. конструктор, если вводишь Название, Издателя и Год (+ 3 дефолтных фотки)
 
 	public GameClass(AddressManager manag, String name, String creator, String year) {
 
+		String currentAdr = "";
+		
+		if (manag.readFrom) {		
+			currentAdr = manag.webPhotoAddress;	
+		} else {	
+			currentAdr = manag.photoFolderAddress;
+		}
+		
 		this.name = name;
 		this.creator = creator;
 		this.mapper = "unknown";
 		this.year = year;
 		this.comment = "stay sharp";
 		this.amount = 3;
-		this.pics = new String[] { manag.photoFolderAddress + addr1, manag.photoFolderAddress + addr2, manag.photoFolderAddress + addr3 };
+		this.pics = new String[] { currentAdr + addr1, currentAdr + addr2, currentAdr + addr3 };
 	}
 
-	// 4. конструктор, если вводишь Название, Издателя, Маппер и Год (+ 3 дефолтных
-	// фотки)
+	/* 4. конструктор, если вводишь Название, Издателя, Маппер и Год (+ 3 дефолтных фотки) */
 
 	public GameClass(AddressManager manag, String name, String creator, String mapper, String year) {
 
+		String currentAdr = "";
+		
+		if (manag.readFrom) {		
+			currentAdr = manag.webPhotoAddress;	
+		} else {	
+			currentAdr = manag.photoFolderAddress;
+		}
+		
 		this.name = name;
 		this.creator = creator;
 		this.mapper = mapper;
 		this.year = year;
 		this.comment = "stay sharp";
 		this.amount = 3;
-		this.pics = new String[] { manag.photoFolderAddress + addr1, manag.photoFolderAddress + addr2, manag.photoFolderAddress + addr3 };
+		this.pics = new String[] { currentAdr + addr1, currentAdr + addr2, currentAdr + addr3 };
 	}
 
-	// 5. конструктор при вводе всех полей (+ 3 дефолтных фотки)
+	/* 5. конструктор при вводе всех полей (+ 3 дефолтных фотки) */
 
 	public GameClass(AddressManager manag, String name, String creator, String mapper, String year, String comment) {
+		
+		String currentAdr = "";
+		
+		if (manag.readFrom) {		
+			currentAdr = manag.webPhotoAddress;	
+		} else {	
+			currentAdr = manag.photoFolderAddress;
+		}
+		
 		this.name = name;
 		this.creator = creator;
 		this.mapper = mapper;
 		this.year = year;
 		this.comment = comment;
 		this.amount = 3;
-		this.pics = new String[] { manag.photoFolderAddress + addr1, manag.photoFolderAddress + addr2, manag.photoFolderAddress + addr3 };
+		this.pics = new String[] { currentAdr + addr1, currentAdr + addr2, currentAdr + addr3 };
 	}
 
-	/*
-	 * 6. Конструктор для записи массива фоток целиком (1 и более фоток), этот
+	/* 6. Конструктор для записи массива фоток целиком (1 и более фоток), этот
 	 * Конструктор помог избавитья от большого кол-ва конструкторов отличающихся
 	 * только кол-ом фотографий. Т.е. теперь можо записывать в конструктор
 	 * бесконечное кол-во фотографий одной игры. Сколько фоток есть в считываемом
-	 * файле, столько и запишем
-	 */
+	 * файле, столько и запишем */
 
 	public GameClass(AddressManager manag, String name, String creator, String mapper, String year, String comment, String[] pic) {
+		
+		String currentAdr = "";
+		
+		if (manag.readFrom) {		
+			currentAdr = manag.webPhotoAddress;	
+		} else {	
+			currentAdr = manag.photoFolderAddress;
+		}
 		
 		this.name = name;
 		this.creator = creator;
@@ -123,19 +169,31 @@ public class GameClass {
 		if (pic.length == 1) { // если 1 фотка кастомная
 
 			this.amount = 3;
-			this.pics = new String[] { pic[0], manag.photoFolderAddress + addr2, manag.photoFolderAddress + addr3 };
+			this.pics = new String[] { currentAdr + pic[0], currentAdr + addr2, 
+					currentAdr + addr3 };
 		}
 
 		else if (pic.length == 2) { // если 2 фотки кастомные
 
 			this.amount = 3;
-			this.pics = new String[] { pic[0], pic[1], manag.photoFolderAddress + addr3 };
+			this.pics = new String[] { currentAdr + pic[0], currentAdr + pic[1], currentAdr + addr3 };
 		}
 
 		else { // если 3 и более фотки кастомные
 
 			this.amount = pic.length; // соответственно кол-во фоток определяется размером Массива
-			this.pics = pic; // записываем в Поле pics массив адресов фоток целиком
+			
+			/* заведем Массив, который преобразует массив с общими адресами фоток (Dizzy/1.jpg) в
+			 * массив полных адресов (C:\Users\Евгений\Desktop\...\Dizzy\1.jpg)  - его и вернем */
+			
+			String[] mas = new String [pic.length];
+			
+			for (int i=0; i<pic.length; i++) {
+				
+				mas[i] = currentAdr + pic[i];
+			}
+			
+			this.pics = mas; // записываем в Поле pics массив адресов фоток целиком
 		}
 	}
 
@@ -191,9 +249,12 @@ public class GameClass {
 		
 		gameInfo();
 		
-		/* фотки показываем, если есть адрес Папки с фотками в Менеджере адресов */
+		/* в зависимости от того, откуда считывается Инфа (manag.readFrom), меняется
+		 * метод показа фоток, т.к. они могут показываться из Локальной папки, либо
+		 * с GitHub.
+		 * Фотки с Компа показываем, если есть адрес Папки с фотками в Менеджере адресов */
 		
-		if ( !manag.photoFolderAddress.equals("") ) {
+		if (!manag.readFrom && !manag.photoFolderAddress.equals("")) {
 			
 			ImageIcon img;
 		
@@ -219,7 +280,21 @@ public class GameClass {
 				}
 			}
 		}
-	}
+		
+		/* фотки с GitHub показываем, если перешли на показ из Инета (readFrom - ture)
+		 * и Инет присутствует */
+		
+		else if (manag.readFrom && manag.isInetHere) {
+			
+			for (int i=0; i<this.getAmount(); i++) {
+				
+				this.webOneGameShow(this.pics[i]);
+			 
+			}
+			
+		} // конец else if (manag.readFrom && manag.isInetHere)
+		
+	} // конец Метода 2.1 showPics(AddressManager manag)
 	
 	// 2.2. Метод по выводу в Окно (JOptionPane) информации об Игре (издатель, маппе и т.д.)
 
@@ -244,5 +319,66 @@ public class GameClass {
 		JOptionPane.showMessageDialog(null, scrollPane, title, JOptionPane.PLAIN_MESSAGE);
 
 	} // конец Метода 2.2
+	
+	/* 2.3 Метод по показу одной фотки из Инета */
+	
+	private void webOneGameShow (String webURL) {
+
+		String fullURL = webURL.replace(" ", "%20");
+				
+		try {
+			
+			URL url = new URL(fullURL);
+			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+			connection.setRequestMethod("GET");
+			connection.setConnectTimeout(5000); // Set timeout
+			connection.setReadTimeout(5000); // Set timeout
+
+		    // Connect to the URL
+			
+			connection.connect();
+
+			// Check the response code
+			
+			int responseCode = connection.getResponseCode();
+			
+			if (responseCode == HttpURLConnection.HTTP_OK) { // если картинка доступна выводим ее
+				
+				//GameClass.windowShowString("Input stream can be opened.");
+				
+				try {
+					
+					Image image = ImageIO.read(url);
+				
+					// Create an ImageIcon from the image
+					
+					ImageIcon imageIcon = new ImageIcon(image);
+
+					// Create a JLabel to hold the ImageIcon
+					
+					JOptionPane.showMessageDialog(null, imageIcon, "That's the Photo of The Game", JOptionPane.PLAIN_MESSAGE);
+					
+					} catch (MalformedURLException e) {
+						
+						e.printStackTrace();
+						JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+						
+					} catch (IOException e) {
+						
+						e.printStackTrace();
+						JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+					}
+				
+			} else {
+				
+				ServiceMethods.windowShow ("Cannot open input stream. Response code: " + responseCode);
+			}
+			
+		} catch (IOException e) {
+			
+			System.out.println("An error occurred: " + e.getMessage());	
+	    }
+		
+	} // конец метода 2.3 webOneGameShow (String webURL)
 
 } // конец Класса GameClass

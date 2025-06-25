@@ -15,33 +15,23 @@ public class MyGameSearcher {
 		AddressManager manager = new AddressManager();
 
 		manager = manager.setting(); // здесь сформирован окончательный Менеджер
-		
-		manager.showManagInfo(); // смотрим что содержит Менеждер
-			
+
 		/* создаем Объект нашего Списочного класса */
 		
-		/* здесь нужно будет решить какое первоначальное значение поля Inet_on_off будет */
-		
-		LocalListObject obj = new LocalListObject (manager);  // Конструктор №3
+		LocalListObject obj = new LocalListObject (manager);  // Конструктор №1
 
-		while (!obj.key.equals("end")) {
-			
-			//manager.showManagInfo();
-			
+		while (!obj.key.equals("end") && !obj.key.equals("конец") ) {
+
 			/* 1. анализируем Ввод, заполняем поля объекта, составляем Списки */
 
 			obj = obj.inputAnalyse(manager);
 
-			/* 2. смотрим Информацию по объекту (это служебный метод) */
-
-			obj.getInfo(manager);
-			
-			/* 3. выводим на экран список Игр, если же заполнен список Полей, выводим его */
+			/* 2. выводим на экран список Игр, если же заполнен список Полей, выводим его */
 
 			obj = obj.mouseChooseWindow(manager);
 		}
 
-		ServiceMethods.windowShow("конец программы");
+		ServiceMethods.windowShow("конец программы"); // чтоб видеть, что прога закончилась
 
 	} // конец главного Метода main
 
