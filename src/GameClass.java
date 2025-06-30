@@ -241,7 +241,7 @@ public class GameClass {
 	}
 	
 	/* 2.1. Метод, который будет показывать фотки Объекта данного класса (т.е. Игры)
-	 * Использую в методе public LocalListObject mouseChooseWindow() */
+	 * Использую в методе public GameListClass mouseChooseWindow() */
 	
 	public void showPics(AddressManager manag) {
 		

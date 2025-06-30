@@ -9,6 +9,12 @@ public class MyGameSearcher {
 
 	public static void main(String[] args) {
 
+		//////////// эксперимент/////////////
+		
+		GitSiteSynchronize synch = new GitSiteSynchronize ();
+	
+		/////////////////////////////////////
+		
 		/* заводим Менеджер адресов, а затем применяем его метод setting для формирования
 		 * набора всех адресов нужных проекту и передаем его в методы */
 		
@@ -16,9 +22,15 @@ public class MyGameSearcher {
 
 		manager = manager.setting(); // здесь сформирован окончательный Менеджер
 
+		////////////эксперимент/////////////////
+		
+		synch.downloadDiffArray(manager);
+		
+		////////////////////////////////////////
+		
 		/* создаем Объект нашего Списочного класса */
 		
-		LocalListObject obj = new LocalListObject (manager);  // Конструктор №1
+		GameListClass obj = new GameListClass (manager);  // Конструктор №1
 
 		while (!obj.key.equals("end") && !obj.key.equals("конец") ) {
 

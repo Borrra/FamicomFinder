@@ -141,168 +141,145 @@ public class GitHubSynchronize {
 
 	public static ArrayList<String> myList = new ArrayList<String>();
 
-	/*
-	 * 4. этот метод считывает инфу из моего текстового файла хранящегося на GitHub
-	 * и заводит в моей папке текстовый файл (если его нету, а если есть,
-	 * перезаписывать его) со всей скачанной инфой, т.е. он ничего не принимает и не
-	 * возвращает, он Обновляет Текстовый Файл проекта (или создает его, если его
-	 * вообще не было) Используется в main при вводе "refreshFile"
-	 */
+//	/*
+//	 * 4. этот метод считывает инфу из моего текстового файла хранящегося на GitHub
+//	 * и заводит в моей папке текстовый файл (если его нету, а если есть,
+//	 * перезаписывать его) со всей скачанной инфой, т.е. он ничего не принимает и не
+//	 * возвращает, он Обновляет Текстовый Файл проекта (или создает его, если его
+//	 * вообще не было) Используется в main при вводе "refreshFile"
+//	 * ПЕРЕНЕСТИ В GitSynchronize
+//	 */
+//
+//	public static void fileFromWebCreator(AddressManager manag) {
+//
+//		// адрес моего файла на GitHub
+//
+//		String fileUrl = manag.webFileAddress;
+//
+//		try {
+//
+//			// Создаем URL объект используя мой адрес
+//
+//			URL url = new URL(fileUrl);
+//
+//			// Открываем соединение к URL
+//
+//			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+//
+//			connection.setRequestMethod("GET"); // Set the request method to GET
+//
+//			// Check if the response code is HTTP_OK (200)
+//
+//			if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+//
+//				// Create a BufferedReader to read the input stream
+//				BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+//				String line;
+//
+//				// Читаем файл строка за строкой и добавляем строки в наш Список
+//
+//				while ((line = in.readLine()) != null) {
+//
+//					myList.add(line);
+//				}
+//
+//				// Close the BufferedReader
+//				in.close();
+//
+//			} else {
+//
+//				System.out.println("Failed to fetch the file: " + connection.getResponseCode());
+//			}
+//
+//			// Disconnect the connection
+//			connection.disconnect();
+//
+//		} catch (IOException e) {
+//
+//			e.printStackTrace();
+//		}
+//
+//		/* Обработаем тут наш Список, для записи его в Файл */
+//
+//		String[] myArray = myList.toArray(new String[0]); // переводим в Массив Строк
+//
+//		// Service_Class.windowShow(myArray); // выводим в Окно
+//
+//		File myTextFile = new File(manag.fileAddress); // объект типа File в папке Проекта
+//		// на рабочем столе (мой текст. файл)
+//
+//		/*
+//		 * создаем Текстовый Файл на рабочем столе, если он еще не создан - случай когда
+//		 * файла изначально не было
+//		 */
+//
+//		try { // первое try для первого создания файла
+//
+//			/*
+//			 * в нашей Директории (рабочий стол) создаем наш файл. Только не совсем на
+//			 * рабочем. Он создается в папке MyGameSearcher на рабочем, даже если ее до
+//			 * этого не было - это над проверить
+//			 */
+//
+//			if (myTextFile.createNewFile()) { // если файла не было, создаем
+//
+//				System.out.println("Text file created good");
+//
+//			} else { // если файл есть, перезаписываем
+//
+//				// System.out.println ("Text file is already exists");
+//			}
+//
+//		} catch (IOException e) { // конец первого try по созданию первого файла
+//
+//			System.err.println("Error creating: " + e.getMessage());
+//		}
+//
+//		/*
+//		 * если наш Текстовый файл существует, пишем туда инфу (а он должен
+//		 * существовать, т.к. в предыдущем участке кода мы его создавали)
+//		 */
+//
+//		if (myTextFile.exists()) {
+//
+//			try (BufferedWriter writer = new BufferedWriter(new FileWriter(manag.fileAddress, false))) {
+//				// try (PrintWriter writer = new PrintWriter(new FileWriter(fileAddres, false)))
+//				// {
+//				for (int i = 0; i < myArray.length; i++) {
+//
+//					/* записываем в файл весь наш Массив строк, считанных с Репозатория */
+//
+//					writer.write(myArray[i]);
+//					writer.newLine();
+//					// writer.write("\n"); // это вставил из-за PrintWriter
+//				}
+//
+//				/*
+//				 * это "закрытие" я ввел по аналогии с закрытием потока при чтении инфы с инета.
+//				 * Я это ввел, и стал работать следующий блок - сейчас текстовый файл удаляется,
+//				 * но т.к. временного нет, он не переиминовывается
+//				 */
+//
+//				writer.close(); // придумал сам
+//
+//				// System.out.println ("file filled with info from the Internet");
+//				ServiceMethods.windowShow("Текст Файл обновлен.");
+//
+//			} catch (IOException e) {
+//
+//				e.printStackTrace();
+//			}
+//
+//		}
+//
+//	} // конец метода 4. fileFromWebCreator
 
-	public static void fileFromWebCreator(AddressManager manag) {
-
-		// адрес моего файла на GitHub
-
-		String fileUrl = manag.webFileAddress;
-
-		try {
-
-			// Создаем URL объект используя мой адрес
-
-			URL url = new URL(fileUrl);
-
-			// Открываем соединение к URL
-
-			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-
-			connection.setRequestMethod("GET"); // Set the request method to GET
-
-			// Check if the response code is HTTP_OK (200)
-
-			if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-
-				// Create a BufferedReader to read the input stream
-				BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-				String line;
-
-				// Читаем файл строка за строкой и добавляем строки в наш Список
-
-				while ((line = in.readLine()) != null) {
-
-					myList.add(line);
-				}
-
-				// Close the BufferedReader
-				in.close();
-
-			} else {
-
-				System.out.println("Failed to fetch the file: " + connection.getResponseCode());
-			}
-
-			// Disconnect the connection
-			connection.disconnect();
-
-		} catch (IOException e) {
-
-			e.printStackTrace();
-		}
-
-		/* Обработаем тут наш Список, для записи его в Файл */
-
-		String[] myArray = myList.toArray(new String[0]); // переводим в Массив Строк
-
-		// Service_Class.windowShow(myArray); // выводим в Окно
-
-		File myTextFile = new File(manag.fileAddress); // объект типа File в папке Проекта
-		// на рабочем столе (мой текст. файл)
-
-		/*
-		 * создаем Текстовый Файл на рабочем столе, если он еще не создан - случай когда
-		 * файла изначально не было
-		 */
-
-		try { // первое try для первого создания файла
-
-			/*
-			 * в нашей Директории (рабочий стол) создаем наш файл. Только не совсем на
-			 * рабочем. Он создается в папке MyGameSearcher на рабочем, даже если ее до
-			 * этого не было - это над проверить
-			 */
-
-			if (myTextFile.createNewFile()) { // если файла не было, создаем
-
-				System.out.println("Text file created good");
-
-			} else { // если файл есть, перезаписываем
-
-				// System.out.println ("Text file is already exists");
-			}
-
-		} catch (IOException e) { // конец первого try по созданию первого файла
-
-			System.err.println("Error creating: " + e.getMessage());
-		}
-
-		/*
-		 * если наш Текстовый файл существует, пишем туда инфу (а он должен
-		 * существовать, т.к. в предыдущем участке кода мы его создавали)
-		 */
-
-		if (myTextFile.exists()) {
-
-			try (BufferedWriter writer = new BufferedWriter(new FileWriter(manag.fileAddress, false))) {
-				// try (PrintWriter writer = new PrintWriter(new FileWriter(fileAddres, false)))
-				// {
-				for (int i = 0; i < myArray.length; i++) {
-
-					/* записываем в файл весь наш Массив строк, считанных с Репозатория */
-
-					writer.write(myArray[i]);
-					writer.newLine();
-					// writer.write("\n"); // это вставил из-за PrintWriter
-				}
-
-				/*
-				 * это "закрытие" я ввел по аналогии с закрытием потока при чтении инфы с инета.
-				 * Я это ввел, и стал работать следующий блок - сейчас текстовый файл удаляется,
-				 * но т.к. временного нет, он не переиминовывается
-				 */
-
-				writer.close(); // придумал сам
-
-				// System.out.println ("file filled with info from the Internet");
-				ServiceMethods.windowShow("Текст Файл обновлен.");
-
-			} catch (IOException e) {
-
-				e.printStackTrace();
-			}
-
-		}
-
-	} // конец метода 4. fileFromWebCreator
-
-	/* 5. мой метод для проверки, есть вообще Инет или нет 
-	 * Перенес этот метод в Класс AddressManager */
-
-	public static boolean isInternetAvailable(AddressManager manag) { // начало метода isInternetAvailable
-
-		try {
-
-			URL url = new URL(manag.inetChecking); // передаем адрес Интернет Ресурса
-			HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-			// urlConnection.setDefaultRequestProperty("User-Agent", "Test");
-			// urlConnection.setDefaultRequestProperty("Connection", "close");
-			urlConnection.setConnectTimeout(1000);
-			urlConnection.connect();
-
-			return (urlConnection.getResponseCode() == 200);
-
-		} catch (Exception e) {
-
-			return false;
-		}
-
-	} // конец метода 5. isInternetAvailable
-
-	/*
-	 * 6. Этот Метод обрабатывает Текстовый файл проекта лежащий на Git Hub и
+	/* 6. Этот Метод обрабатывает Текстовый файл проекта лежащий на Git Hub и
 	 * формирует из него список Объектов данного класса, т.е. список всех Папок
 	 * фотографий проекта со списком файлов (фотографий) содержащихся в них. Т.е. по
 	 * этому списку и будем создавать папки на компе и по этому же списку будем
 	 * качать в них Фотографии
-	 */
+	 * ПЕРЕНЕСТИ В GitSynchronize */
 
 	public static GitHubSynchronize[] checkGitHubFolder(AddressManager manag) {
 
@@ -590,7 +567,7 @@ public class GitHubSynchronize {
 		 * с другом, например в методе removeAll в дальнейшем
 		 */
 
-		Arrays.sort(gitHubArr, new MyWebNameComp());
+		//Arrays.sort(gitHubArr, new MyWebNameComp());
 
 		return gitHubArr;
 
@@ -602,6 +579,7 @@ public class GitHubSynchronize {
 	 * списком содержащим Папки с Git Hub и полизвести обновление. Т.е. метод только
 	 * составляет список содержимого Папки Проекта находящейся на Компьютере
 	 * (включая Папку 1. General )
+	 * ПЕРЕНЕСТИ В GitSynchronize
 	 */
 
 	public static GitHubSynchronize[] checkLocalFolder(AddressManager manag) {
@@ -684,6 +662,8 @@ public class GitHubSynchronize {
 	/*
 	 * 8. Метод, который будет создавать Папку на Рабочем столе, аргументом
 	 * передается Название файла
+	 * ПЕРЕНЕСЕНА В GameFolderClass, чтобы папка игры могла
+	 * создавать папку с названием Экземпляра (самой папки)... 
 	 */
 
 	public static String createFolder(AddressManager manag, String a) {
@@ -745,7 +725,9 @@ public class GitHubSynchronize {
 
 	} // конец Метода № 8
 
-	/* 9. Метод который скачивает один файл с Git Hub по его адресу */
+	/* 9. Метод который скачивает один файл с Git Hub по его адресу
+	 * МОЖЕТ ПЕРЕНЕСТИ ЭТОТ МЕТОД В GameFolderClass, чтобы папка игры могла
+	 * загружать все файлы (фотки) которые она должна содержать.. */
 
 	public static String downloadOneFile(String fileUrl, String destinationFilePath) throws IOException {
 
@@ -851,6 +833,9 @@ public class GitHubSynchronize {
 	 * если они уже есть, он все равно будет пытаться из скачать, т.е. время на это
 	 * все равно будет тратиться, значит этот метод целесообразно применять, когда
 	 * папки вообще не существует (не нашлась)
+	 * МОЖЕТ ПЕРЕНЕСТИ ЭТОТ МЕТОД В GameFolderClass, чтобы создать такой метод,
+	 * который будет качать все папку целиком (т.е. каждая папка, скачает себя сама)
+	 * только это все будет организованно в метод...
 	 */
 
 	public static void downloadFullFolder(AddressManager manag) {
@@ -898,14 +883,12 @@ public class GitHubSynchronize {
 
 				try {
 
-					/*
-					 * Первый аргумент - это полный адрес фотки на Git Hub, причем пробелы в
+					/* Первый аргумент - это полный адрес фотки на Git Hub, причем пробелы в
 					 * названии (если есть) нужно заменить на "%20", Второй аргумнт - это полный
 					 * путь расположения файла, т.е. адрес созданой выше папки плюс название фотки
-					 * (7.jpg например) напирмер: 1.
-					 * https://raw.githubusercontent.com/Borrra/GamesPhoto/main/Dizzy/3.jpg 2.
-					 * C:\Users\Евгений\Desktop\MyGameSearcher\GamesPhoto\Dizzy\3.jpg
-					 */
+					 * (7.jpg например) напирмер:
+					 * 1. https://raw.githubusercontent.com/Borrra/GamesPhoto/main/Dizzy/3.jpg
+					 * 2. C:\Users\Евгений\Desktop\MyGameSearcher\GamesPhoto\Dizzy\3.jpg */
 
 					String phot = downloadOneFile(arr[i].photoAddres[k].replace(" ", "%20"), manag.photoFolderAddress
 							+ arr[i].getName() + "\\" + getLastPartStartingWith(arr[i].photoAddres[k], '/'));
@@ -1053,7 +1036,7 @@ public class GitHubSynchronize {
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-		Arrays.sort(difArray, new MyWebNameComp()); // сортируем его
+		//Arrays.sort(difArray, new MyWebNameComp()); // сортируем его
 
 		/*
 		 * далее идет блок который работает, только есл и массиве difArray есть
@@ -1274,11 +1257,9 @@ public class GitHubSynchronize {
 
 	} // конец Метода № 11 differListPhotoToDownload ()
 
-	/*
-	 * 12. Метод который чекает список Файлов на Git Hub, чекает папку на
+	/* 12. Метод который чекает список Файлов на Git Hub, чекает папку на
 	 * Компьютере, создает список разницы этих двух списков и составляет список
-	 * файлов, которые нужно загружать
-	 */
+	 * файлов, которые нужно загружать */
 
 	public static void fileListToDownload(AddressManager manag) {
 
@@ -1299,10 +1280,9 @@ public class GitHubSynchronize {
 			GitHubSet.add(gitHubArray[i]);
 		}
 
-		// windowShowFull(gitHubArray, "Это файлы на Git Hub"); // Первый показ - Список
-		// на Git Hub
+		// windowShowFull(gitHubArray, "Это файлы на Git Hub"); // Первый показ - Список на Git Hub
 
-		///////////////// * формируем Список файлов на Компе *//////////////////////////
+		////////// * формируем Список файлов на Компе *///////////
 
 		GitHubSynchronize[] compArray = checkLocalFolder(manag);
 
@@ -1313,28 +1293,21 @@ public class GitHubSynchronize {
 			compSet.add(compArray[i]);
 		}
 
-		// windowShowFull(compArray, "Это файлы на Компе"); // Второй показ - Список на
-		// Компе
-
-		/*
-		 * применяем метод removeAll чтобы удалить из списка на Git Hub элементы,
-		 * которые есть на компьютере
-		 */
+		/* применяем метод removeAll чтобы удалить из списка на Git Hub элементы,
+		 * которые есть на компьютере */
 
 		GitHubSet.removeAll(compSet);
 
-		/*
-		 * в итоге мы получили список элементов нашего Списка, список адресов фотографий
+		/* в итоге мы получили список элементов нашего Списка, список адресов фотографий
 		 * которых отличается от списка адресов фоток на компе. Т.е. это еще не
 		 * окончательный список фотографий, потому что это элементы целиком, а нам
-		 * интересны отдельные фотографии
-		 */
+		 * интересны отдельные фотографии */
 
 		/* получем "разничный" Массив */
 
 		GitHubSynchronize[] difArray = GitHubSet.toArray(new GitHubSynchronize[0]); // массив, который возвращает Метод
 
-		Arrays.sort(difArray, new MyWebNameComp()); // сортируем его
+		//Arrays.sort(difArray, new MyWebNameComp()); // сортируем его
 
 		if (difArray.length > 0) {
 
@@ -1345,11 +1318,9 @@ public class GitHubSynchronize {
 			return;
 		}
 
-		/*
-		 * мы получили массив Объектов в адресах которых есть расхождения с файлами на
+		/* мы получили массив Объектов в адресах которых есть расхождения с файлами на
 		 * Компе. Т.е. это еще не конкретные адреса фоток. Вот дальше и будем вычислять
-		 * адреса конкретных фоток, которые нужно скачивать
-		 */
+		 * адреса конкретных фоток, которые нужно скачивать */
 
 		for (int t = 0; t < difArray.length; t++) { // цикл длиной равной "разничному" массиву (несколько игр допустим)
 
@@ -1367,21 +1338,17 @@ public class GitHubSynchronize {
 
 				if (compArray[r].getName().equals(difArray[t].getName())) {
 
-					/*
-					 * теперь списки адресов фоток на Git Hub и на Компе в папках с расхождениями
-					 * добавим в "уникальные" списки set1 и set2 для сравнения
-					 */
+					/* теперь списки адресов фоток на Git Hub и на Компе в папках с расхождениями
+					 * добавим в "уникальные" списки set1 и set2 для сравнения */
 
 					Set<String> set1 = new HashSet<>(Arrays.asList(compArray[r].getPhotoAddres())); // фотки Mortal
 																									// Kombat на компе
-					Set<String> set2 = new HashSet<>(Arrays.asList(difArray[t].getPhotoAddres())); // фотки Mortal
+					Set<String> set2 = new HashSet<>(Arrays.asList(difArray[t].getPhotoAddres()));  // фотки Mortal
 																									// Kombat на Git Hub
 
-					/*
-					 * если сейас мы применим set2.removeAll(set1), то в списке set2 остануться
+					/* если сейас мы применим set2.removeAll(set1), то в списке set2 остануться
 					 * адреса фотографий на Git Hub, которых нет на Компе и следовательно которые
-					 * нужно скачивать!
-					 */
+					 * нужно скачивать! */
 
 					set2.removeAll(set1);
 
@@ -1392,11 +1359,9 @@ public class GitHubSynchronize {
 
 			} // конец внутренего цикла for
 
-			/*
-			 * если после окончания внешней итерации w==0, значит Папка с расхождением
+			/* если после окончания внешней итерации w==0, значит Папка с расхождением
 			 * отсутствует на Компе, а значит все ее фотки надо скачивать (т.е. добавляем их
-			 * все в список)
-			 */
+			 * все в список) */
 
 			if (w == 0) {
 
@@ -1408,10 +1373,8 @@ public class GitHubSynchronize {
 
 		} // конец внешнего цикла for
 
-		/*
-		 * если в списке что-то есть, делаем из него Массив и выводим на экран, если
-		 * нет, пишем, что совпадение Полное
-		 */
+		/* если в списке что-то есть, делаем из него Массив и выводим на экран, если
+		 * нет, пишем, что совпадение Полное */
 
 		String[] filesToDownloadArray = setList.toArray(new String[0]);
 
@@ -1428,15 +1391,10 @@ public class GitHubSynchronize {
 
 	} // конец Метода № 12 fileListToDownload ()
 
-	/* 13. Метод по удалению всех файлов из Папки */
+	/* 13. Метод по удалению всех файлов из Папки 
+	 * ПЕРЕНЕС В GameFolderClass */
 
 	public static void deleteFiles(String directoryPath) {
-
-		// consoleWindow.startWindow("Удаляем файлы: ");
-
-		// Specify the directory path
-
-		// String directoryPath = "path/to/your/directory";
 
 		// Create a File object for the directory
 
@@ -1488,12 +1446,10 @@ public class GitHubSynchronize {
 	//////////////////// * Далее идет 5 служебный класса
 	//////////////////// *////////////////////////////
 
-	/*
-	 * 1 Метод служебный, для вырезания названия фотки (1.jpg) из строки Адреса для
+	/* 1 Метод служебный, для вырезания названия фотки (1.jpg) из строки Адреса для
 	 * записи ее в папку: было
 	 * "C:\Users\Евгений\Desktop\MyGameSearcher\GamesPhoto\Dizzy\3.jpg" стало
-	 * "3.jpg"
-	 */
+	 * "3.jpg" СЕЙЧАС МНЕ УЖЕ НЕ НУЖЕН */
 
 	public static String getLastPartStartingWith(String input, char delimiter) {
 
@@ -1512,10 +1468,8 @@ public class GitHubSynchronize {
 
 	} // коней Метода № 1
 
-	/*
-	 * 2 Метод служебный, для вырезания названия папки (Mortal Kombat) для записи ее
-	 * в папку
-	 */
+	/* 2 Метод служебный, для вырезания названия папки (Mortal Kombat) для записи ее
+	 * в папку СЕЙЧАС МНЕ УЖЕ НЕ НУЖЕН */
 
 	public static String getPreLastPartStartingWith(String input, char delimiter) {
 
@@ -1534,14 +1488,12 @@ public class GitHubSynchronize {
 
 	} // коней Метода № 2
 
-	/*
-	 * 3. Метод разбивает передаваемую ему строку на строки используя в качестве
+	/* 3. Метод разбивает передаваемую ему строку на строки используя в качестве
 	 * метки строку, передаваемую вторым аргументом и возвращает строку (первй
 	 * аргумент) за исключением последней части: было
 	 * "C:\Users\Евгений\Desktop\MyGameSearcher\GamesPhoto\Dizzy\3.jpg" - адрес
 	 * файла стало: "C:\Users\Евгений\Desktop\MyGameSearcher\GamesPhoto\Dizzy" -
-	 * адрес папки
-	 */
+	 * адрес папки */
 
 	public static String minusLastPart(String input, String delimiter) {
 
@@ -1662,12 +1614,10 @@ public class GitHubSynchronize {
 
 } // конец Класса GitHubSynchronize (с десятью методами)
 
-/*
- * этот Класс myWindow формирует JPanel с возможностью нажатия клавишь, а Метод
+/* этот Класс myWindow формирует JPanel с возможностью нажатия клавишь, а Метод
  * в конце применяет эту JPanel в JOptionPane.showMessageDialog(null, myPanel,
  * a, JOptionPane.PLAIN_MESSAGE), и этот же метод (procesWindow) применяется в
- * Методе 2.6 в Service_Class, в окне длительности процесса
- */
+ * Методе 2.6 в Service_Class, в окне длительности процесса */
 
 class myWindow extends JPanel implements ActionListener {
 

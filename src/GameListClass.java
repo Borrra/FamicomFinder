@@ -19,7 +19,7 @@ import javax.swing.*;
  * на компьютере. Т.е. по адресу текстового файла читает его и формирует из него Список Объектов (Игр). Применяется
  * в главном методе в Классе MyGameSearcher при формировании Массива Объектов */
 
-public class LocalListObject {
+public class GameListClass {
 
 	private static int ind; // это переменная для вывода номера выбранного элемента из приемника
 	
@@ -43,7 +43,7 @@ public class LocalListObject {
 	/* 1. Конструктор для формирования Полного Объекта. Использую при первоначальном
 	 * формировании Объекта, при вводе "", при вкл/выкл Интернета */
 
-	LocalListObject(AddressManager manag) {
+	GameListClass(AddressManager manag) {
 
 		level = 1;
 		starCode = 0;
@@ -67,7 +67,7 @@ public class LocalListObject {
 	/* 2. Конструктор использую в InputAnalyse, когда есть совпадение по Полям
 	 * (creators, mappers, years) */
 
-	LocalListObject(List<GameClass> a, String c, String b, int d) {
+	GameListClass(List<GameClass> a, String c, String b, int d) {
 
 		level = d;
 		starCode = 0;
@@ -82,7 +82,7 @@ public class LocalListObject {
 	
 	/* 3. Конструктор использую в методе objectSorting ) */
 
-	LocalListObject(List<GameClass> a, int b, String c, String d) {
+	GameListClass(List<GameClass> a, int b, String c, String d) {
 
 		level = b;
 		starCode = 0;
@@ -608,14 +608,14 @@ public class LocalListObject {
 	 * иной Конструктор, т.е. формируя объект с новыми данными в полях и новыми
 	 * списками */
 
-	public LocalListObject inputAnalyse(AddressManager manag) {
+	public GameListClass inputAnalyse(AddressManager manag) {
 
 		/* если список Игр пуст, значит ничего не нашлось, а значит нужно
 		 * обновлять список - используем Конструктор №1 */
 		
 		if (this.GameList.size()==0) {
 
-			LocalListObject list = new LocalListObject(manag); // Констр. №1
+			GameListClass list = new GameListClass(manag); // Констр. №1
 			
 			return list;
 		}
@@ -641,7 +641,7 @@ public class LocalListObject {
 
 			/* используем Конструктор № 2 */
 			
-			LocalListObject list = new LocalListObject(this.GameList, "creator", searchTrace, level);
+			GameListClass list = new GameListClass(this.GameList, "creator", searchTrace, level);
 
 			return list;
 		}
@@ -652,7 +652,7 @@ public class LocalListObject {
 
 			/* используем Конструктор № 2 */
 			
-			LocalListObject list = new LocalListObject(this.GameList, "mapper", searchTrace, level);
+			GameListClass list = new GameListClass(this.GameList, "mapper", searchTrace, level);
 
 			return list;
 		}
@@ -663,7 +663,7 @@ public class LocalListObject {
 
 			/* используем Конструктор № 2 */
 			
-			LocalListObject list = new LocalListObject(this.GameList, "year", searchTrace, level);
+			GameListClass list = new GameListClass(this.GameList, "year", searchTrace, level);
 
 			return list;
 		}
@@ -682,7 +682,7 @@ public class LocalListObject {
 			
 			/* используем Констуктор №1 */
 			
-			LocalListObject list = new LocalListObject(manag);
+			GameListClass list = new GameListClass(manag);
 
 			return list;
 		}
@@ -699,7 +699,7 @@ public class LocalListObject {
 			
 			/* используем Конструктор № 1 */
 			
-			LocalListObject list = new LocalListObject(manag);
+			GameListClass list = new GameListClass(manag);
 
 			return list;
 		}
@@ -731,7 +731,7 @@ public class LocalListObject {
 
 			/* используем Конструктор № 1 */
 			
-			LocalListObject list = new LocalListObject(manag);
+			GameListClass list = new GameListClass(manag);
 
 			return list;
 		}
@@ -760,7 +760,7 @@ public class LocalListObject {
 
 				/* далее идет "стандартная" сортировка списка Игр по key */
 				
-				LocalListObject xlist = this.objectSorting();
+				GameListClass xlist = this.objectSorting();
 				
 				return xlist;
 				
@@ -781,7 +781,7 @@ public class LocalListObject {
 		
 		else {
 
-			LocalListObject list = objectSorting();
+			GameListClass list = objectSorting();
 
 			return list;
 		}
@@ -791,7 +791,7 @@ public class LocalListObject {
 	/* 3. Метод сортирует Список Объекта и вызвращает Объект с отсортированным
 	 * Списком Игр */
 
-	private LocalListObject objectSorting() {
+	private GameListClass objectSorting() {
 
 		int w = 0; // переменная для отслеживания того, какой список возвращаем
 
@@ -847,7 +847,7 @@ public class LocalListObject {
 
 			/* используем Конструктор №3 */
 
-			LocalListObject list = new LocalListObject(objectList, level, this.key, searchTrace);
+			GameListClass list = new GameListClass(objectList, level, this.key, searchTrace);
 
 			return list;
 
@@ -889,7 +889,7 @@ public class LocalListObject {
 
 					/* используем Конструктор №3 */
 					
-					LocalListObject list = new LocalListObject(objectList, level, this.key, searchTrace);
+					GameListClass list = new GameListClass(objectList, level, this.key, searchTrace);
 
 					return list;
 
@@ -918,7 +918,7 @@ public class LocalListObject {
 
 					/* используем Конструктор №3 */
 					
-					LocalListObject list = new LocalListObject(objectList, level, this.key, searchTrace);
+					GameListClass list = new GameListClass(objectList, level, this.key, searchTrace);
 
 					return list;
 
@@ -933,7 +933,7 @@ public class LocalListObject {
 
 		/* используем Конструктор №3 */
 		
-		LocalListObject list = new LocalListObject(objectList, level, this.key, searchTrace);
+		GameListClass list = new GameListClass(objectList, level, this.key, searchTrace);
 
 		return list;
 
@@ -943,7 +943,7 @@ public class LocalListObject {
 	 * Слайдером и возможностью выбора элементов из этого списка Мышью.
 	 * Вот над созданием этого метода (Окна) я бился долгие месяцы! */
 	
-	public LocalListObject mouseChooseWindow(AddressManager manag) {
+	public GameListClass mouseChooseWindow(AddressManager manag) {
 
 		/* если метод видит "end" - ничего не показывает, и в main - конец проги */
 		
@@ -1126,7 +1126,7 @@ public class LocalListObject {
 			
 			/* используем Конструктор №1 */
 			
-			LocalListObject retList = new LocalListObject(manag);
+			GameListClass retList = new GameListClass(manag);
 
 			return retList;
 		}
@@ -1147,7 +1147,7 @@ public class LocalListObject {
 			
 			ind = 0; 
 
-			LocalListObject xlist = this.objectSorting().mouseChooseWindow(manag);
+			GameListClass xlist = this.objectSorting().mouseChooseWindow(manag);
 			
 			return xlist;
 			
@@ -1184,4 +1184,4 @@ public class LocalListObject {
 				JOptionPane.PLAIN_MESSAGE);
 	}
 
-} // конец Класса LocalListObject
+} // конец Класса GameListClass

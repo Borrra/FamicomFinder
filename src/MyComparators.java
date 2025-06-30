@@ -32,10 +32,10 @@ class MyYearCompNew implements Comparator<GameClass> {
 // * создаем Компаратор для объектов типа GitHubSynchronize, но по-моему он не
 // работает! */
 
-class MyWebNameComp implements Comparator<GitHubSynchronize> {
+class MyWebNameComp implements Comparator<GameFolderClass> {
 
 	@Override
-	public int compare(GitHubSynchronize a, GitHubSynchronize b) {
+	public int compare(GameFolderClass a, GameFolderClass b) {
 
 		/* сначла сравниваем по Имени */
 
@@ -58,12 +58,10 @@ class MyWebNameComp implements Comparator<GitHubSynchronize> {
 	}
 }
 
-/*
- * вот этот Компаратор заработал, он сортирует имена фотографий в Папках на
+/* вот этот Компаратор заработал, он сортирует имена фотографий в Папках на
  * компе и при формировании папки General (я вставляю ее в Массив Git Hub
  * вручную). Для него нужно чтобы строки начинались с цифры (1.jpg, 15.jpg и
- * т.д.)
- */
+ * т.д.) */
 
 class MyStringNameComp implements Comparator<String> {
 

@@ -1307,7 +1307,7 @@ public class AddressManager {
 		ServiceMethods.windowShow(ar, "Менеждер содержит: ");
 	}
 	
-	/* 12. Метод, который я применяю в методе inputAnalyse класса LocalListObject,
+	/* 12. Метод, который я применяю в методе inputAnalyse класса GameListClass,
 	 * в условии, когда ввели InetOn или InetOff с клавиатуры, и который меняет
 	 * значение поля AddressManager в зависимости от переданного числа (0 или 1) */
 	

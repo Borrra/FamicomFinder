@@ -4,12 +4,6 @@ import java.util.TreeSet;
 import java.util.ArrayList;
 import java.awt.*;
 import javax.swing.*;
-
-import java.awt.Component;
-import javax.swing.DefaultListCellRenderer;
-import javax.swing.JList;
-import javax.swing.JLabel;
-
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -223,6 +217,69 @@ public class ServiceMethods {
 
 	} // конец метода № 8
 
+	/* 8'. Метод по выводу в Окно списка всех Папок и адресов Фоток в них */
+
+	public static void windowShow(GameFolderClass[] arrg, String p) {
+
+		String text = "";
+		String title;
+
+		for (int i = 0; i < arrg.length; i++) {
+
+			String ch = String.format("%03d", i + 1);
+			text = text + ch + ". " + arrg[i].getName() + "\n";
+
+			for (int k = 0; k < arrg[i].getPhotoAddres().length; k++) {
+
+				text = text + arrg[i].getPhotoAddres()[k] + "\n";
+			}
+
+			text = text + "\n";
+		}
+
+		// формируем надпись в заголовке Окна используя Статич. Переменные j и k
+
+		title = "There're " + arrg.length + " elements. " + p + " .";
+
+		JTextArea textArea = new JTextArea(text);
+		textArea.setEditable(false);
+		textArea.setLineWrap(true);
+		textArea.setWrapStyleWord(true);
+		JScrollPane scrollPane = new JScrollPane(textArea);
+		scrollPane.setPreferredSize(new Dimension(500, 500));
+
+		JOptionPane.showMessageDialog(null, scrollPane, title, JOptionPane.PLAIN_MESSAGE);
+
+	} // конец Метода № 8'
+
+	/* 9'. Метод по выводу в Окно только Имен папок  */
+
+	public static void windowShoww(GameFolderClass[] arrg, String p) {
+
+		String text = "";
+		String title;
+
+		for (int i = 0; i < arrg.length; i++) {
+
+			String ch = String.format("%03d", i + 1);
+			text = text + ch + ". " + arrg[i].getName() + "\n";
+		}
+
+		// формируем надпись в заголовке Окна используя Статич. Переменные j и k
+
+		title = "There're " + arrg.length + " elements. " + p + " .";
+
+		JTextArea textArea = new JTextArea(text);
+		textArea.setEditable(false);
+		textArea.setLineWrap(true);
+		textArea.setWrapStyleWord(true);
+		JScrollPane scrollPane = new JScrollPane(textArea);
+		scrollPane.setPreferredSize(new Dimension(500, 500));
+
+		JOptionPane.showMessageDialog(null, scrollPane, title, JOptionPane.PLAIN_MESSAGE);
+
+	} // конец Метода № 6
+	
 	/* 10. Метод по выводу инфрмации по использованию Приложения */
 
 	public static void informWindow() {
@@ -259,7 +316,7 @@ public class ServiceMethods {
 	/*
 	 * 11'' Экспериментальный Метод по получению Массива Строк Определенного Поля из Массива Объектов
 	 * GameClass, название нужного Поля передается вторым Аргументом.
-	 * Использую его в Конструкторе №5 класса LocalListObject. 
+	 * Использую его в Конструкторе №5 класса GameListClass. 
 	 */
 
 	public static List<String> getFieldListNew(List<GameClass> objects, String fieldName) {
