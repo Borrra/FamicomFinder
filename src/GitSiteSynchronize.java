@@ -1,4 +1,6 @@
 import java.awt.Dimension;
+import java.awt.Frame;
+import javax.swing.SwingUtilities;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -9,11 +11,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
 import java.util.Set;
-
-import javax.swing.JOptionPane;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -30,7 +27,7 @@ public class GitSiteSynchronize {
 	 * возвращает, он Обновляет Текстовый Файл проекта (или создает его, если его
 	 * вообще не было) Будет использован при вводе "refreshFile" */
 
-	public void refreshTextFile (AddressManager manag) {
+	public String refreshTextFile (AddressManager manag) {
 
 		List <String> myList = new ArrayList <String> ();
 		
@@ -87,9 +84,31 @@ public class GitSiteSynchronize {
 
 		// Service_Class.windowShow(myArray); // выводим в Окно
 
-		File myTextFile = new File(manag.fileAddress); // объект типа File в папке Проекта
-		// на рабочем столе (мой текст. файл)
-
+		File myTextFile; // файл под создаваемый Текст Файл
+		
+		if (manag.fileAddress.equals("")) {
+			
+			/* если Менеджер не нашел ТекстФайла вообще ниеге, нужно завести папку проекта
+			 * (либо попытаться это сделать и понять, что она уже есть). */
+			
+			ServiceMethods.windowShow("Создадим (если ее нет) папку Проекта на РабСтоле");
+			
+			/* создаем папку Проекта на Рабочем Столе */
+			
+			String fileAdr = manag.createProjectFolder();
+					
+			myTextFile = new File(fileAdr + "/" + manag.textFileName);
+			
+		} else {
+			
+			/* если fileAddress не равен нулю, значит ТекстФайл должен существовать
+			 * а значит его нужно просто обновить */
+			
+			myTextFile = new File(manag.fileAddress);
+		}
+		
+		String flAddr = myTextFile.getAbsolutePath();
+		
 		/* создаем Текстовый Файл на рабочем столе, если он еще не создан - случай когда
 		 * файла изначально не было */
 
@@ -118,7 +137,7 @@ public class GitSiteSynchronize {
 
 		if (myTextFile.exists()) {
 
-			try (BufferedWriter writer = new BufferedWriter(new FileWriter(manag.fileAddress, false))) {
+			try (BufferedWriter writer = new BufferedWriter(new FileWriter(flAddr, false))) {
 				// try (PrintWriter writer = new PrintWriter(new FileWriter(fileAddres, false)))
 				// {
 				for (int i = 0; i < myArray.length; i++) {
@@ -143,6 +162,11 @@ public class GitSiteSynchronize {
 				e.printStackTrace();
 			}
 
+			return myTextFile.getAbsolutePath();
+			
+		} else {
+			
+			return "";
 		}
 
 	} // конец метода 1. fileFromWebCreator
@@ -527,32 +551,74 @@ public class GitSiteSynchronize {
 
 		GameFolderClass[] difArray = GitHubSet.toArray(new GameFolderClass[0]);
 
+		Arrays.sort (difArray, new MyWebNameComp());
+		
 		return difArray;
 		
 	} // конец Метода № 4 differArray ()
 	
 	/* 5. Метод, который скачивает фотки "разничного" массива */
 	
-	public void downloadDiffArray (AddressManager manag) {
+	public String downloadDiffArray (AddressManager manag) {
 		
-		/* создаем массив Папок с расхождениями */
+		GameFolderClass[] arr;
 		
-		GameFolderClass[] arr = differArray (manag);
+		/* Метод вызывается как принудительно, так и при запуске программы,
+		 * когда при старте проги, на Компе папка с Фотками не нашлась, поэтому
+		 * первое условие, это для случая, когда при старте Папи с фотками нет и
+		 * мы создаем папку Проекта (если ее нет) и в ней папку Фотографий и фотки
+		 * уже будут обновляться в нее */
+		
+		if ( manag.photoFolderAddress.equals("") ) {
+			
+			 manag.createProjectFolder();
+			 
+			 manag.photoFolderAddress = manag.createPhotoFolder();
+			 
+			/* создаем массив Папок с расхождениями, он будет максимальный, т.е.
+			 * фотки будут загружаться все */
+				
+			arr = differArray (manag);
+			
+		} else {
+		
+			/* создаем массив Папок с расхождениями */
+		
+			arr = differArray (manag);
+		
+		}
 		
 		/* если его длина не больше нуля, т.е. расхождения есть - загружаем файлы */
 		
 		if (arr.length>0) {
 			
-			ServiceMethods.windowShow(arr, "Отсутствующие файлы: ");
+			/* здесь открываем мое Консоль-Окно для показа скачиаемых файлов */
+				
+			ServiceMethods.windowShoww(arr, "Папки с расхождениями: ");
+
+			consoleWindow.startWindow("Скачиваем файлы:"); // открытие окна-консоли
 			
 			for (int i=0; i<arr.length; i++) {
 			
 				arr[i].download(manag);
 			}
 			
+			
+			//////////////////Блок закрытия окна-консоли ////////////////////
+
+			SwingUtilities.invokeLater(() -> {
+
+				for (Frame frame : Frame.getFrames()) { frame.dispose(); }
+			});	
+			//////////////////////////////////////////////////////////////////
+				
+			return manag.photoFolderAddress;
+			
 		} else {
 			
 			ServiceMethods.windowShow("Качать нечего. Полное совпадение.");
+			
+			return manag.photoFolderAddress;
 		}
 		
 	} // конец метода 5. downloadDiffArray (AddressManager manag)

@@ -94,6 +94,22 @@ public class GameListClass {
 		GameList = a;
 		FieldList = new ArrayList<String>();
 	}
+	
+	/* 4. Конструктор "Пустой" использую для закрытия программы
+	 * если ТекстФайл не нашелся в методе inputAnalyse */
+
+	GameListClass () {
+
+		level = 1;
+		starCode = 0;
+
+		fieldName = "";
+		searchTrace = "";
+		key = "end";
+
+		GameList = new ArrayList <GameClass>();
+		FieldList = new ArrayList<String>();
+	}
 
 	/* Getter-ы */
 
@@ -130,12 +146,23 @@ public class GameListClass {
 	}
 
 	/* 1.1 Наш метод который будет считывать данные (с файла на компе),
-	 * формировать Коллекцию Игр. Применяю в Конструкторе №3 */
+	 * формировать Коллекцию Игр. Применяю в Конструкторе №1 */
 
 	private List<GameClass> readGamesFromFile(AddressManager manag) {
 
 		List<GameClass> games = new ArrayList<>();
 
+		/* если адрес ТекстФайла не найден, читать ничего не надо, возвращаем
+		 * пустой лист */
+		
+		if (manag.fileAddress.equals("")) {
+			
+			return games;
+		}
+		
+		/* здесь нужно вообще сделать проверку адреса и если файл существует
+		 * только тогда, начинать считывание */
+		
 		try (BufferedReader br = new BufferedReader(new FileReader(manag.fileAddress))) {
 
 			/* заводим 3 переменные, перед циклом, значит они "глобальные" по отношению к
@@ -610,6 +637,17 @@ public class GameListClass {
 
 	public GameListClass inputAnalyse(AddressManager manag) {
 
+		/* условия для обработки Менеджера, у которого отсутвтвует адрес
+		 * ТестФайла. Конструктор №4 создан как раз для этого условия.
+		 * Здесь поле key задается равным "end" для окончания проги */
+		
+		if ( manag.fileAddress.equals("") ) {
+			
+			GameListClass list = new GameListClass(); // Констр. №4
+			
+			return list;
+		}
+		
 		/* если список Игр пуст, значит ничего не нашлось, а значит нужно
 		 * обновлять список - используем Конструктор №1 */
 		
@@ -776,7 +814,42 @@ public class GameListClass {
 			}
 		}
 
-		/* 10. Дефолтное условие, если предидущие условия не выполены, значит
+		/* 10. Условие по обновлению ТекстФайла по вводу "refreshFile" */
+		
+		else if ( key.equals("refreshFile") && manag.isInetHere && !manag.fileAddress.equals("") ) {
+			
+			GitSiteSynchronize synch = new GitSiteSynchronize ();
+			
+			synch.refreshTextFile(manag);
+			
+			GameListClass list = new GameListClass(manag);
+
+			return list;
+		}
+		
+		/* 11. Условие по обновлению папок с Фотками по вводу "refreshPhoto" */
+		
+		else if ( key.equals("refreshPhoto") && manag.isInetHere) {
+			
+			GitSiteSynchronize synch = new GitSiteSynchronize ();
+			
+			synch.downloadDiffArray(manag);
+			
+			GameListClass list = new GameListClass(manag);
+
+			return list;
+		}
+		
+		/* 12. Условие когда ввели "refreshFile" или "refreshPhoto", но Инета нет */
+		
+		else if ( (key.equals("refreshFile") || key.equals("refreshPhoto")) && !manag.isInetHere) {
+			
+			ServiceMethods.windowShow("Не получится обновить данные. Отсутствует интернет");
+
+			return this;
+		}
+	
+		/* 13. Дефолтное условие, если предидущие условия не выполены, значит
 		 * проводим Сортировку */
 		
 		else {
@@ -949,7 +1022,9 @@ public class GameListClass {
 		
 		if ( this.key.equals("end") || this.key.equals("конец") ) {
 
-			return this;
+			GameListClass list = new GameListClass(); // Констр. №4
+			
+			return list;
 		}
 
 		/* если посмотрели спиок, а потом ввели starCode (*_ _) значит показываем фотки

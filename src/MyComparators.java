@@ -48,8 +48,8 @@ class MyWebNameComp implements Comparator<GameFolderClass> {
 
 		/* если Имена равны, сравниваем по отсортированным адресам фоток (по массиву) */
 
-		String[] sortedA = Arrays.copyOf(a.getPhotoAddres(), b.getPhotoAddres().length);
-		String[] sortedB = Arrays.copyOf(b.getPhotoAddres(), a.getPhotoAddres().length);
+		String[] sortedA = Arrays.copyOf(a.getPhotoNames(), b.getPhotoNames().length);
+		String[] sortedB = Arrays.copyOf(b.getPhotoNames(), a.getPhotoNames().length);
 
 		Arrays.sort(sortedA);
 		Arrays.sort(sortedB);

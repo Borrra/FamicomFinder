@@ -17,7 +17,7 @@ import java.lang.reflect.Field;
 public class ServiceMethods {
 
 	/*
-	 * 9 Методов windowShow/windowShoww по показу Строки, Строки и Строки Заголовка,
+	 * 11 Методов windowShow/windowShoww по показу Строки, Строки и Строки Заголовка,
 	 */
 
 	// 1. Метод выводит в Окно передаваюмую ему Строку
@@ -217,7 +217,7 @@ public class ServiceMethods {
 
 	} // конец метода № 8
 
-	/* 8'. Метод по выводу в Окно списка всех Папок и адресов Фоток в них */
+	/* 9. Метод по выводу в Окно списка всех Папок и адресов Фоток в них */
 
 	public static void windowShow(GameFolderClass[] arrg, String p) {
 
@@ -229,9 +229,9 @@ public class ServiceMethods {
 			String ch = String.format("%03d", i + 1);
 			text = text + ch + ". " + arrg[i].getName() + "\n";
 
-			for (int k = 0; k < arrg[i].getPhotoAddres().length; k++) {
+			for (int k = 0; k < arrg[i].getPhotoNames().length; k++) {
 
-				text = text + arrg[i].getPhotoAddres()[k] + "\n";
+				text = text + arrg[i].getPhotoNames()[k] + "\n";
 			}
 
 			text = text + "\n";
@@ -239,7 +239,7 @@ public class ServiceMethods {
 
 		// формируем надпись в заголовке Окна используя Статич. Переменные j и k
 
-		title = "There're " + arrg.length + " elements. " + p + " .";
+		title = "There're " + arrg.length + " elements. " + p;
 
 		JTextArea textArea = new JTextArea(text);
 		textArea.setEditable(false);
@@ -250,9 +250,9 @@ public class ServiceMethods {
 
 		JOptionPane.showMessageDialog(null, scrollPane, title, JOptionPane.PLAIN_MESSAGE);
 
-	} // конец Метода № 8'
+	} // конец Метода № 9
 
-	/* 9'. Метод по выводу в Окно только Имен папок  */
+	/* 10. Метод по выводу в Окно только Имен папок  */
 
 	public static void windowShoww(GameFolderClass[] arrg, String p) {
 
@@ -267,7 +267,7 @@ public class ServiceMethods {
 
 		// формируем надпись в заголовке Окна используя Статич. Переменные j и k
 
-		title = "There're " + arrg.length + " elements. " + p + " .";
+		title = "There're " + arrg.length + " elements. " + p;
 
 		JTextArea textArea = new JTextArea(text);
 		textArea.setEditable(false);
@@ -278,9 +278,9 @@ public class ServiceMethods {
 
 		JOptionPane.showMessageDialog(null, scrollPane, title, JOptionPane.PLAIN_MESSAGE);
 
-	} // конец Метода № 6
+	} // конец Метода № 10
 	
-	/* 10. Метод по выводу инфрмации по использованию Приложения */
+	/* 11. Метод по выводу инфрмации по использованию Приложения */
 
 	public static void informWindow() {
 
@@ -311,10 +311,10 @@ public class ServiceMethods {
 		JOptionPane.showMessageDialog(null, scrollPane, "Pay attention! Important Information!",
 				JOptionPane.PLAIN_MESSAGE);
 
-	} // конец Метода № 10
+	} // конец Метода № 11
 
 	/*
-	 * 11'' Экспериментальный Метод по получению Массива Строк Определенного Поля из Массива Объектов
+	 * 12 Экспериментальный Метод по получению Массива Строк Определенного Поля из Массива Объектов
 	 * GameClass, название нужного Поля передается вторым Аргументом.
 	 * Использую его в Конструкторе №5 класса GameListClass. 
 	 */
@@ -357,10 +357,10 @@ public class ServiceMethods {
 
 		return list;
 
-	} // конец Метода № 11
+	} // конец Метода № 12
 	
 	/*
-	 * 12. Метод по обработке Кода "*_ _ _" по которому в Проекте происходит выбор
+	 * 13. Метод по обработке Кода "*_ _ _" по которому в Проекте происходит выбор
 	 * чего-либо из списка. Принимает Строку и если она начинается с "*" и
 	 * возвращает true (если это число) если оно соответствующей длины и не 0.
 	 * Использую его в Методе InputAnalyse, в одном из условий
@@ -400,12 +400,12 @@ public class ServiceMethods {
 
 		return w;
 
-	} // конец Метода № 12
+	} // конец Метода № 13
 
 	////////////////////////// 3 Метода по выбору Игр мышью из списка
 	////////////////////////// /////////////////////////////////
 
-	/* 15. Метод по выбору игры мышью, при загрузке фоток из Интернета */
+	/* 14. Метод по выбору игры мышью, при загрузке фоток из Интернета */
 
 	public static void webChoosingWithMouseWindow(List<GameClass> arrg) {
 
@@ -498,10 +498,10 @@ public class ServiceMethods {
 
 		JOptionPane.showMessageDialog(null, scrollPane, "Хурма", JOptionPane.PLAIN_MESSAGE);
 
-	} // конец метода 15
+	} // конец метода 14
 
 	/*
-	 * 16. Простой Метод Да/Нет, возвращает 0 - если Да, 1 - если Нет, и -1 - если
+	 * 15. Простой Метод Да/Нет, возвращает 0 - если Да, 1 - если Нет, и -1 - если
 	 * Крестик Использую в main для выбора скачивания или нет фоток с инета
 	 */
 
@@ -509,7 +509,7 @@ public class ServiceMethods {
 
 		// Show a dialog with Yes and No options
 
-		int response = JOptionPane.showConfirmDialog(null, "Скачиваем папку с Фотками с Инета?", "Выберите вариант",
+		int response = JOptionPane.showConfirmDialog(null, "Фоток на компе нет. Скачиваем с Инета (Yes) или продолжаем без них (No)", "Выберите вариант",
 				JOptionPane.YES_NO_OPTION);
 
 		return response;

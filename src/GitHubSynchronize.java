@@ -1793,7 +1793,7 @@ class consoleWindow {
 				String input = inputField.getText(); // Get text from input field
 
 				if (input.equalsIgnoreCase("end")) {
-
+					
 					toConsole("Closing the console...");
 
 					frame.dispose();

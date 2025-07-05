@@ -145,7 +145,7 @@ public class AddressManager {
 		webFileAddress = webFlAddr;
 	}
 	
-	/* 5. Пятый Конструктор, когда вообще ничего не нашлось. Просто для отличея его
+	/* 5. Пятый Конструктор, когда вообще ничего не нашлось. Просто для отличие его
 	 * от Первого Констрктора, передадим туда число, а поля с адресами равны "" */
 	
 	AddressManager (int a) {
@@ -901,20 +901,9 @@ public class AddressManager {
 			return this;
 		}
 
-	} // конец Метода 4.2 compFilesFinder
+	} // конец Метода 6. compFilesFinder
 
-	/* 7. Единственный метод ( не считая showManagInfo () ), используемый в main и комбинирующий 2 главных
-	 * метода данного класса т.е. сначала анализирует Файлы на Рабочем Столе,
-	 * затем Адреса в Скрытом Текст. файле (compFilesAnalyzer()), а затем (если это нужно)
-	 * производит поиск файлов на Компе (compFilesFinder()) и проверяет наличие Интернета,
-	 * заполняя поле isInetHere */
-	
-	public AddressManager setting () {
-		
-		return this.compFilesAnalyzer().compFilesFinder();
-	}
-	
-	/* 8.1 Метод по определению адреса Текст Файла из Списка всех найденных Если
+	/* 7.1 Метод по определению адреса Текст Файла из Списка всех найденных Если
 	 * Список пуст, вернется строка "". Применяется в предидущем методе 4. */
 
 	private String createFinalTextAddres(ArrayList<String> MyList) {
@@ -1020,7 +1009,7 @@ public class AddressManager {
 
 	} // конец Метода 8.1
 
-	/* 8.2 Метод по определению адреса Папки с Фотками из Списка всех найденных Если
+	/* 7.2 Метод по определению адреса Папки с Фотками из Списка всех найденных Если
 	 * Список пустой, метод вернет строку "". Применяется в предидущем методе 4 */
 
 	private String createFinalPhotoAddres(ArrayList<String> MyList) {
@@ -1137,22 +1126,18 @@ public class AddressManager {
 
 	} // конец Метода 5.2 createFinalPhotoAddres
 
-	/* 9. Это Метод, который пишет в Скрытый Текстовый файл переменные
-	 * GameClass.fileAddres и GameClass.addres Применяется в предидущем методе 4. */
+	/* 8. Это Метод, который пишет в Скрытый Текстовый файл переменные
+	 * GameClass.fileAddres и GameClass.addres Применяется в  */
 
 	private void writingFilesToHiddingFile(AddressManager manag) {
 
 		/////////////// блок записи найденных адресов в текстовый файл на рабочем  столе ///////////////////
 
-		/*
-		 * проверим наличие на рабочем столе текстового файла и при отсутствии заведм
-		 * его Создаем объект класса File со следующим Конструктором
-		 */
+		/* проверим наличие на рабочем столе текстового файла и при отсутствии заведм
+		 * его Создаем объект класса File со следующим Конструктором */
 
-		/*
-		 * метод cerateNewFile() может выбрасывать Исключения, соответственно его нельзя
-		 * употреблять без конструкции try-catch
-		 */
+		/* метод cerateNewFile() может выбрасывать Исключения, соответственно его нельзя
+		 * употреблять без конструкции try-catch */
 
 		File deskTop = new File(manag.desktopPath); // директория - рабочий стол
 
@@ -1223,7 +1208,7 @@ public class AddressManager {
 
 	} // конец метода 9. writingFilesToHiddingFile
 
-	/* 10.1 Вот этот метод будет принимать список строк (ArrayList) т.е. адреса
+	/* 9.1 Вот этот метод будет принимать список строк (ArrayList) т.е. адреса
 	 * файлов, потом чекать атрибуты этих файлов и выбирать наиболее "свежий" файл,
 	 * т.е. файл с самой свежей датой последней модификации и будет возвращать эту
 	 * Строку (адрес). Применяться будте в методе №4 MyNewGameFilesAddress () при
@@ -1258,13 +1243,12 @@ public class AddressManager {
 
 	} // конец Метода № 10.1 findNewestFile
 
-	/* 10.2 Вот этот метод такой же как предидущий только оперирует адресами Папок.
+	/* 9.2 Вот этот метод такой же как предидущий только оперирует адресами Папок.
 	 * Будет принимать список строк (ArrayList) т.е. адреса папок, потом чекать
 	 * атрибуты этих папок и выбирать наиболее "свежую" папку, т.е. папку с самой
 	 * свежей датой последней модификации и будет возвращать эту Строку (адрес).
 	 * Применяться будте в методе №4 MyNewGameFilesAddress () при формировании
-	 * переменной GameClass.addres.
-	 */
+	 * переменной GameClass.addres. */
 
 	private String findNewestFolder(List<String> folderPaths) throws IOException {
 
@@ -1295,7 +1279,32 @@ public class AddressManager {
 
 	} // конец Метода № 10.2 findNewestFolder
 
-	/* 11. Метод служебный, для просмотра содержимого Менеджера */
+	///////////////// Далее идет 3 public метода, ради который все и затевалось ///////////////
+	
+	/* 10. Единственный метод, используемый в main и комбинирующий 3 главных
+	 * метода данного класса т.е. сначала анализирует Файлы на Рабочем Столе,
+	 * затем Адреса в Скрытом Текст. файле (compFilesAnalyzer()), затем (если это нужно)
+	 * производит поиск файлов на Компе (compFilesFinder()) и проверяет наличие Интернета,
+	 * заполняя поле isInetHere, а затем если что-либо отсутствует на Компе, скачивает
+	 * (текстФайл) или предлагает скачать (ФотоПапка) */
+	
+	public AddressManager setting () {
+		
+		AddressManager manag = this;
+		
+		manag = manag.compFilesAnalyzer().compFilesFinder().managWebRefresh();
+		
+		if ( manag.fileAddress.equals("") ) {
+			
+			ServiceMethods.windowShow("Отсутствует файл проекта. Программа будет завершена.");
+		}
+		
+		return manag;
+	}
+	
+	/* 11. Метод служебный, для просмотра содержимого Менеджера.
+	 * Применяю в методе inputAnalyse класса GameListClass в условии, когда ввели
+	 * "managInfo" с клавиатуры для простомта Менеджера */
 	
 	public void showManagInfo () {
 		
@@ -1345,5 +1354,116 @@ public class AddressManager {
 		else return this;	
 		
 	} // конец Метода 12
+	
+	/* 13. Метод, который анализирует "финальный" Менеджер и если
+	 * отсутствует Адрес ТекстФайла или Адрес Папки с фотками - предлагает их скачать
+	 * Метод обновит (скачает) инфу только если файлы на компе вообще не нашлись,
+	 * если нашлись хотябы пустые, обновлять он их не будет (их можно будет обновить
+	 * "принудительно" вводя refreshPhoto или refreshFile */
+	
+	private AddressManager managWebRefresh () {
+		
+		if ( this.fileAddress.equals("") && this.isInetHere ) {
+			
+			GitSiteSynchronize synch = new GitSiteSynchronize();
+			
+			this.fileAddress = synch.refreshTextFile(this);
+			
+			ServiceMethods.windowShow(this.fileAddress, "fileAddress");
+		}
+		
+		if ( this.photoFolderAddress.equals("") && this.isInetHere ) {
+			
+			if (ServiceMethods.yesNoWindow()==0) {
+				
+				GitSiteSynchronize synch = new GitSiteSynchronize();
+			
+				this.photoFolderAddress = synch.downloadDiffArray(this);
+			
+				ServiceMethods.windowShow(this.photoFolderAddress, "photoAddress");
+			
+			}
+		}
+		
+		return this;
+	}
+	
+	/* 14. Метод, который создает Папку Проекта на Рабочем столе
+	 * Использую здесь в 15 методе и в GitSiteSynchronize в 1 и 5 методах */
+	
+	public String createProjectFolder () {
+		
+		File folder = new File(desktopPath, projectFolderName);
+		
+		/* если папка не существует - создаем ее, иначе - она уже существует,
+		 * в обоих случаях возвращаем Путь к этой папке */
+		
+		if (!folder.exists()) { 
+			
+			boolean folderCreated = folder.mkdir();
+			
+			if (folderCreated) { // если папка создалась - возвращаем Путь
+				
+				System.out.println("Folder created: " + folder.getAbsolutePath());
+				
+				return folder.getAbsolutePath();
+				
+			} else { // если не создалась - возвращаем null
+				
+				System.out.println("Failed to create folder.");
+				
+				return null; 
+			}
+			
+		} else {
+			
+			System.out.println("Folder already exists: " + folder.getAbsolutePath());
+			
+			return folder.getAbsolutePath();
+		}
+		
+	} // конец Метода № 14
+	
+	/* 15. Метод, который создает Папку Проекта на Рабочем столе и в ней еще Папку
+	 * Использую в GitSiteSynchronize в 5 методе */
+	
+	public String createPhotoFolder () {
+		
+		/* создадим (если ее нет) папку Проекта на Рабочем */
+		
+		String mainFold = createProjectFolder();
+		
+		/* создадим File для нашей папки GamesPhoto */
+		
+		File folder = new File(mainFold, this.photoFolderName);
+		
+		/* если папка не существует - создаем ее, иначе - она уже существует,
+		 * в обоих случаях возвращаем Путь к этой папке */
+		
+		if (!folder.exists()) { 
+			
+			boolean folderCreated = folder.mkdir();
+			
+			if (folderCreated) { // если папка создалась - возвращаем Путь
+				
+				System.out.println("Folder created: " + folder.getAbsolutePath());
+				
+				return folder.getAbsolutePath();
+				
+			} else { // если не создалась - возвращаем null
+				
+				System.out.println("Failed to create folder.");
+				
+				return null; 
+			}
+			
+		} else {
+			
+			System.out.println("Folder already exists: " + folder.getAbsolutePath());
+			
+			return folder.getAbsolutePath();
+		}
+		
+	} // конец Метода № 15
 	
 } // конец Класса

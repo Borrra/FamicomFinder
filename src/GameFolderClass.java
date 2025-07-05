@@ -20,7 +20,7 @@ public class GameFolderClass {
 	GameFolderClass (String a, String[] b) {
 
 		this.folderName = a;  // Dizzy
-		this.photoName = b; // 1.jpg, 2.jpg, 3.jpg
+		this.photoName = b;   // 1.jpg, 2.jpg, 3.jpg
 	}
 	
 	/////////// Переопределим equals and hashCode Класса Object //////////////
@@ -62,7 +62,8 @@ public class GameFolderClass {
 
 /////////////////////////////////////////////////////////////////////////////////////////
 
-	/* 1. Метод получения Имени Папки */
+	/* 1. Метод получения Имени Папки 
+	 * Использую в Компараторе и в методе вывода списка на Экран (ServiceMethods) */
 
 	public String getName() {
 
@@ -71,23 +72,15 @@ public class GameFolderClass {
 		return a;
 	}
 
-	/* 2. Метод получения Массива Адресов Фоток игр данной Папки */
+	/* 2. Метод получения Массива Адресов Фоток игр данной Папки
+	 * Использую в Компараторе и в методе вывода списка на Экран (ServiceMethods) */
 
-	public String[] getPhotoAddres() {
+	public String[] getPhotoNames() {
 
 		String[] a = this.photoName;
 
 		return a;
 	}
-
-//	/* 3. Метод получения одного адреса фотки игр данной Папки */
-//
-//	public String getOnePhotoAddres(int b) {
-//
-//		String a = this.photoAddres[b];
-//
-//		return a;
-//	}
 	
 	/* 1. Метод, который создаёт в GamePhoto папке проекта папку
 	 * с названием Объекта (папкой), если ее нет (затестил - работает) */
@@ -110,21 +103,24 @@ public class GameFolderClass {
 
 				if (folderCreated) { // если папка создалась - возвращаем Путь
 
-					System.out.println("\nFolder created: " + folder.getAbsolutePath() + "\n");
-
+					//System.out.println("\nFolder created: " + folder.getAbsolutePath() + "\n");
+					consoleWindow.toConsole("\nFolder created: " + folder.getAbsolutePath() + "\n");
+					
 					return folder.getAbsolutePath();
 
 				} else { // если не создалась - возвращаем null
 
-					System.out.println("Failed to create folder.");
-
+					//System.out.println("Failed to create folder.");
+					consoleWindow.toConsole("Failed to create folder.");
+					
 					return null;
 				}
 
 			} else { // если папка уже существует
 
-				System.out.println("Folder already exists: " + folder.getAbsolutePath());
-
+				//System.out.println("Folder already exists: " + folder.getAbsolutePath());
+				consoleWindow.toConsole("\nFolder already exists: " + folder.getAbsolutePath() + "\n");
+				
 				return folder.getAbsolutePath();
 			}
 			
@@ -164,7 +160,7 @@ public class GameFolderClass {
 
 						if (deleted) { // папка удалена
 
-							System.out.println("Deleted file: " + file.getAbsolutePath());
+							//System.out.println("Deleted file: " + file.getAbsolutePath());
 
 						} else { // если папка не удалилась
 
@@ -231,7 +227,8 @@ public class GameFolderClass {
 				outputStream.write(buffer, 0, bytesRead);
 			}
 
-			System.out.println ("Downloaded file: " + fullURL);
+			//System.out.println ("Downloaded file: " + fullURL);
+			consoleWindow.toConsole("Downloaded file: " + fullURL);
 			
 			outputStream.close();
 			inputStream.close();
@@ -251,7 +248,7 @@ public class GameFolderClass {
 			
 		if (adr != null) { // если папка создалась идем дальше
 			
-			this.delete(manag); // удаляем все файлы из папки
+			this.delete(manag); // удаляем все файлы из папки	
 			
 			/* качаем одну за одной фотки с GitHub */
 			

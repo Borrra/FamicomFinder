@@ -1,20 +1,8 @@
-
-import java.awt.Dimension;
-import java.io.File;
-import java.io.IOException;
-import java.util.*;
-import javax.swing.*;
-
+ 
 public class MyGameSearcher {
 
 	public static void main(String[] args) {
 
-		//////////// эксперимент/////////////
-		
-		GitSiteSynchronize synch = new GitSiteSynchronize ();
-	
-		/////////////////////////////////////
-		
 		/* заводим Менеджер адресов, а затем применяем его метод setting для формирования
 		 * набора всех адресов нужных проекту и передаем его в методы */
 		
@@ -22,12 +10,6 @@ public class MyGameSearcher {
 
 		manager = manager.setting(); // здесь сформирован окончательный Менеджер
 
-		////////////эксперимент/////////////////
-		
-		synch.downloadDiffArray(manager);
-		
-		////////////////////////////////////////
-		
 		/* создаем Объект нашего Списочного класса */
 		
 		GameListClass obj = new GameListClass (manager);  // Конструктор №1
@@ -38,6 +20,15 @@ public class MyGameSearcher {
 
 			obj = obj.inputAnalyse(manager);
 
+			/* условие "принудительного" обновления Менеджера */
+			
+			if ( obj.key.equals("refreshManag") ) {
+				
+				manager = manager.setting();
+				
+				continue;
+			}
+			
 			/* 2. выводим на экран список Игр, если же заполнен список Полей, выводим его */
 
 			obj = obj.mouseChooseWindow(manager);
