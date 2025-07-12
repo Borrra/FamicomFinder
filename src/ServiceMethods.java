@@ -2,23 +2,45 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import java.lang.reflect.Field;
 
-/* В этом классе будут рутинные (служебные Методы) для моего проекта.
- * Также вконце расположен класс NumberedListCellRenderer, с единственным методом
- * getListCellRendererComponent (переопределенным). Используется для внедрения
- * счетчика строк в Окнах выбора строк Мышью */
+
+/* В данном файле 4 Класса: Первый - основной и остальные 3 вспомогательные */
+
+////////////////////////// ПЕРВЫЙ КЛАСС /////////////////////////////
+
+/* В этом классе будут рутинные (служебные Методы) для моего проекта */
 
 public class ServiceMethods {
 
-	/*
-	 * 11 Методов windowShow/windowShoww по показу Строки, Строки и Строки Заголовка,
-	 */
+	/* 10 Методов windowShow/windowShoww по показу даных и 4 разных:
+	 * 
+	 * 1.  windowShow (String arr);
+	 * 2.  windowShow (String arr, String akk);
+	 * 3.  windowShow (String[] arr);
+	 * 4.  windowShow (String[] arr, String a);
+	 * 5.  windowShoww(List<String> arr);
+	 * 6.  windowShoww(List<String> arr, String a);
+	 * 7.  windowShow (GameClass[] arrg);
+	 * 8.  windowShow (List<GameClass> arrg);
+	 * 9.  windowShow (GameFolderClass[] arrg, String p); вывод всей инфы
+	 * 10. windowShoww(GameFolderClass[] arrg, String p); вывод только назв. Папки
+	 * 
+	 * 11. informWindow();
+	 * 12. List<String> getFieldListNew(List<GameClass> objects, String fieldName);
+	 * 13. boolean isStarCodeOk(String k);
+	 * 14. int yesNoWindow(); */
 
 	// 1. Метод выводит в Окно передаваюмую ему Строку
 
@@ -36,10 +58,8 @@ public class ServiceMethods {
 
 	} // конец Метода № 1
 
-	/*
-	 * 2. Метод выводит в Окно передаваюмую ему Строку и вторую передаваемую ему
-	 * Строку он выводит в заголовок Окна
-	 */
+	/* 2. Метод выводит в Окно передаваюмую ему Строку и вторую передаваемую ему
+	 * Строку он выводит в заголовок Окна */
 
 	public static void windowShow(String arr, String akk) {
 
@@ -151,10 +171,8 @@ public class ServiceMethods {
 
 	} // конец Метода № 6
 
-	/*
-	 * 7. Метод по выводу Имен Массива Объектов GameClass[] в Окно (JOptionPane) со
-	 * Слайдером в заголовок передаются Статич. переменные чтобы значть что ищем
-	 */
+	/* 7. Метод по выводу Имен Массива Объектов GameClass[] в Окно (JOptionPane) со
+	 * Слайдером в заголовок передаются Статич. переменные чтобы значть что ищем  */
 
 	public static void windowShow(GameClass[] arrg) {
 
@@ -185,8 +203,7 @@ public class ServiceMethods {
 
 	} // конец метода № 7
 
-	// 8. Метод по выводу Имен Списка Объектов List <GameClass> в Окно (JOptionPane)
-	// со Слайдером
+	// 8. Метод по выводу Имен Списка Объектов List <GameClass> в Окно (JOptionPane) со Слайдером
 
 	public static void windowShow(List<GameClass> arrg) {
 
@@ -284,21 +301,23 @@ public class ServiceMethods {
 
 	public static void informWindow() {
 
-		String text = "   В окне моего поисковика можно вводить названия игр, либо просто символы\n"
+		String text = "       В окне моего поисковика можно вводить названия игр, либо просто символы\n"
 				+ " содержащиеся в названии игры (если введена одна буква, программа выдаст все\n"
 				+ " игры начинающиеся на эту букву) плюс при введении конкретного имени Издателя\n"
 				+ " игры либо Маппера либо Года выпуска, также будет выведен список игр относящихся\n"
 				+ " к данному Издателю, Мапперу или Году.\n"
-				+ "   Также существует ряд ключевых слов с определенными функциями:\n\n"
+				+ "       Также существует ряд ключевых слов с определенными функциями:\n\n"
 				+ " creators                  - вывод списка всех Издателей\n" + " издатели\n\n"
 				+ " mappers                 - вывод списка всех Мапперов\n" + " мапперы\n\n"
 				+ " years                      - вывод списка всех Годов выпуска\n" + " года или годы\n\n"
 				+ " InetOff                    - включаем работу с Компьютера\n\n"
 				+ " InetOn                    - включаем работу с Интернета\n\n"
 				+ " refreshFile              - обновляем Текстовый Файл\n\n"
-				+ " refreshPhoto           - обновляем Папку с Фотками\n\n"
-				+ " FilesAddress           - смотрим адреса наших файлов\n" + " АдресФайлов\n\n"
-				+ " checkPhoto             - повторно ищем Фотки на компе\n\n"
+				+ " refreshPhoto          - обновляем Папку с Фотками\n\n"
+				+ " refreshManag         - обновляем данные по файлам\n\n"
+				+ " managInfo              - смотрим состав Менеджера файлов\n\n"
+				+ " listInfo                    - смотрим состав Списка\n\n"
+				+ " Info                        - смотрим Провила Пользования Прогой\n\n"
 				+ " end или конец       - выход из Программы\n";
 
 		JTextArea textArea = new JTextArea(text);
@@ -313,11 +332,9 @@ public class ServiceMethods {
 
 	} // конец Метода № 11
 
-	/*
-	 * 12 Экспериментальный Метод по получению Массива Строк Определенного Поля из Массива Объектов
+	/* 12 Экспериментальный Метод по получению Массива Строк Определенного Поля из Массива Объектов
 	 * GameClass, название нужного Поля передается вторым Аргументом.
-	 * Использую его в Конструкторе №5 класса GameListClass. 
-	 */
+	 * Использую его в Конструкторе №5 класса GameListClass. */
 
 	public static List<String> getFieldListNew(List<GameClass> objects, String fieldName) {
 
@@ -359,12 +376,10 @@ public class ServiceMethods {
 
 	} // конец Метода № 12
 	
-	/*
-	 * 13. Метод по обработке Кода "*_ _ _" по которому в Проекте происходит выбор
+	/* 13. Метод по обработке Кода "*_ _ _" по которому в Проекте происходит выбор
 	 * чего-либо из списка. Принимает Строку и если она начинается с "*" и
 	 * возвращает true (если это число) если оно соответствующей длины и не 0.
-	 * Использую его в Методе InputAnalyse, в одном из условий
-	 */
+	 * Использую его в Методе InputAnalyse, в одном из условий */
 
 	public static boolean isStarCodeOk(String k) {
 
@@ -402,108 +417,8 @@ public class ServiceMethods {
 
 	} // конец Метода № 13
 
-	////////////////////////// 3 Метода по выбору Игр мышью из списка
-	////////////////////////// /////////////////////////////////
-
-	/* 14. Метод по выбору игры мышью, при загрузке фоток из Интернета */
-
-	public static void webChoosingWithMouseWindow(List<GameClass> arrg) {
-
-		String title; // то, что будет написано в заголовке нашего Окна
-
-		/* создаем Список Имен игр из нашего Списка Оъбектов */
-
-		List<String> stringList = new ArrayList<String>();
-
-		for (int i = 0; i < arrg.size(); i++) {
-
-			stringList.add(arrg.get(i).getName());
-		}
-
-		// присваиваем m1 значение равное длине нашего Массива
-
-		//GameClass.m1 = stringList.size();
-
-		// добавляем наш Список Строк 'stringList' в наш JList
-
-		DefaultListModel<String> listModel = new DefaultListModel<>();
-
-		// добавляем наш Массив Строк в наш JList
-
-		for (String item : stringList) {
-
-			listModel.addElement(item);
-		}
-
-		// создаем JList - myList
-
-		JList<String> myList = new JList<>(listModel);
-
-		// создаем типо "Счетчик" к нашму JList
-
-		myList.setCellRenderer(new NumberedListCellRenderer());
-
-		// создаем Панель Прокрутки и добавляем туда наш Список myList
-
-		JScrollPane scrollPane = new JScrollPane(myList);
-
-		myList.addListSelectionListener(new ListSelectionListener() { // начало Метода регистрации Приемника
-
-			public void valueChanged(ListSelectionEvent e) { // начало Метода регистрации События
-				if (!e.getValueIsAdjusting()) {
-
-					// получаем один выбранный Мышкой Элемент (Строку)
-
-					String selectedElement = myList.getSelectedValue();
-
-					// получаем Индекс (номер выбранной Строки)
-
-					int index = -1;
-
-					ListModel<String> model = myList.getModel();
-
-					for (int i = 0; i < model.getSize(); i++) {
-						if (model.getElementAt(i).equals(selectedElement)) {
-							index = i;
-							break;
-						}
-					}
-
-					// по Индексу выбранной Строки, выбираем Объект из нашего Массива Объектов
-
-					GameClass shit = arrg.get(index);
-
-					// Оъект в окно (полная инфа об Игре) если элементов более 1
-
-
-					// показываем Фотографии выбранного Объекта (Игры)
-
-					//String[] pics = shit.gamePics(arrg, index);
-
-					/*
-					 * организуем цикл по выводу фоток на экран с Инета. За один цикл показываем
-					 * одну фотку. Количество циклов зависит от содержания поля amount, для его
-					 * получения используем метод GameClass.getAmount(arrg, GameClass.m-1) класса
-					 * GameClass. Т.е. сколько фоток столько и итераций
-					 */
-
-				}
-
-			} // конец метода Внутреннего Абстрактного Класса, т.е. конец Метода регистрации
-				// События
-		}); // конец нашего Внутреннего Абстрактного Класса, т.е. Метода регистрации
-			// Приемника
-
-		scrollPane.setPreferredSize(new Dimension(500, 500));
-
-		JOptionPane.showMessageDialog(null, scrollPane, "Хурма", JOptionPane.PLAIN_MESSAGE);
-
-	} // конец метода 14
-
-	/*
-	 * 15. Простой Метод Да/Нет, возвращает 0 - если Да, 1 - если Нет, и -1 - если
-	 * Крестик Использую в main для выбора скачивания или нет фоток с инета
-	 */
+	/* 14. Простой Метод Да/Нет, возвращает 0 - если Да, 1 - если Нет, и -1 - если
+	 * Крестик Использую в main для выбора скачивания или нет фоток с инета */
 
 	public static int yesNoWindow() {
 
@@ -515,9 +430,11 @@ public class ServiceMethods {
 		return response;
 	}
 
-} // конец Класса ServiceMethods
+} // конец 1-го Класса ServiceMethods
 
-/* Служебный Класс, для нумерования строк в Окнах, методов: 13, 14, 15. */
+////////////////////////// ВТОРОЙ КЛАСС /////////////////////////////
+
+/* Служебный Класс, для нумерования строк в Окнах, методов: 13, 14 */
 
 class NumberedListCellRenderer extends DefaultListCellRenderer {
 
@@ -532,4 +449,228 @@ class NumberedListCellRenderer extends DefaultListCellRenderer {
 
 		return label;
 	}
-}
+} // конец 2-го класса NumberedListCellRenderer
+
+///////////////////////// ТРЕТИЙ КЛАСС /////////////////////////////
+
+/* этот Класс myWindow формирует JPanel с возможностью нажатия клавишь, а Метод
+ * в конце применяет эту JPanel в JOptionPane.showMessageDialog(null, myPanel,
+ * a, JOptionPane.PLAIN_MESSAGE), и этот же метод (procesWindow) применяется
+ * в окне длительности процесса Класс AddressManager Метод compFilesFinder() */
+
+class myWindow extends JPanel implements ActionListener {
+
+	/* т.е. мы как бы делаем свою Кастомную JPanel, которя применяет интерфейс
+	 * ActionListener, для возможности использования кнопок */
+
+/////////* устанавливаем поля нашего Класса SnakeGame *//////////////
+
+	private final int CELL = 20;
+	private final int WIDTH = 310; // ширина окна
+	private final int HEIGHT = 30; // высота окна
+
+	private Timer timer;
+	private long startTime;
+
+	private long elapsedTimer = 0;
+	
+	/* заводим Связанный Список для координат каждого Кубика Змеи */
+
+	private LinkedList<Point> stuff = new LinkedList<Point>();
+
+	/* Это такой большой Конструктор */
+	
+	public myWindow(String k) {
+
+		stuff.add(new Point(0, 7)); // начальное положение Змеи
+		stuff.add(new Point(WIDTH - 180, 7));
+		stuff.add(new Point(WIDTH - 180 + CELL, 7));
+
+		/* задаем Размеры Окна, причем высоту задаем с учетом размера нижней,
+		 * дополнительной зоны отображения Очков SCORE_HIGHT */
+
+		setPreferredSize(new Dimension(WIDTH, HEIGHT));
+		setBackground(Color.BLACK);
+		setFocusable(true);
+
+		/* регистрируем Приемник */
+
+		addKeyListener(new KeyAdapter() {
+
+			/* Класс KeyEvent */
+
+			@Override
+			public void keyPressed(KeyEvent e) {
+
+				/* метод getKeyCode() возвращает код нажатой кнопки (просто число),
+				 * соответственно по этому коду уже срабатывают Кейсы - их может быть сколько
+				 * угодно */
+
+				switch (e.getKeyCode()) {
+
+				/* если менять координаты точки в этом блоке, то она будет двигаться только по
+				 * мере нажатия клавиши, поэтому при нажатии стрелок меняется только значение
+				 * token, а уже в Методе Snake будет действия на этот token */
+
+				case KeyEvent.VK_ESCAPE:
+
+					System.exit(0);
+					break;
+
+				} // конец Switch
+
+			} // конец keyPressed
+
+		}); // конец регистрации Приемника
+
+		timer = new Timer(64, this); // скорость движения кубиков в окне
+		timer.start();
+		startTime = System.currentTimeMillis();
+
+	} // конец Конструктора
+
+	//////* переориентированные Методы класа JPanel */////
+
+	@Override
+	protected void paintComponent(Graphics g) { // то, что будет отображаться в Окне
+		super.paintComponent(g);
+
+		g.setColor(Color.RED);
+
+		for (int i = 0; i < stuff.size(); i++) {
+
+			g.fillRect(stuff.get(i).x, stuff.get(i).y, CELL, CELL);
+		}
+
+		long elapsedTime = (System.currentTimeMillis() - startTime) / 1000;
+
+		g.drawString("Seconds: " + elapsedTime, WIDTH - 180, HEIGHT - 10);
+
+		elapsedTimer = elapsedTime;
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) { // метод который и делает Экшен
+
+		moveSnake();
+
+		repaint();
+	}
+
+	/* 1. Метод формирующий двигающийся объект */
+	
+	public void moveSnake() { // метод будет как бы циклиться в actionPerformed
+
+		stuff.addFirst(new Point(stuff.getFirst().x + CELL, stuff.getFirst().y));
+
+		stuff.removeLast(); // убираем Хвост
+
+		if (stuff.getFirst().x >= WIDTH) {
+			stuff.getFirst().x = 0;
+		}
+	}
+
+	/* 2. Метод используем в классе AddressManager в методе compFilesFinder ()
+	 * для отображения длительности процесса */
+
+	public static void procesWindow(String a) {
+
+		/* активируем наше Кастомное Окно, оно является JPanel по сути */
+
+		myWindow myPanel = new myWindow("stuff");
+
+		JOptionPane.showMessageDialog(null, myPanel, a, JOptionPane.PLAIN_MESSAGE);
+
+	}
+
+} // конец 3-го Класса myWindow
+
+////////////////////////// ЧЕТВЕРТЫЙ КЛАСС /////////////////////////////
+
+/* Класс Окна-Консоли, где 2 метода: 1. выводящий само окно (startWindow)
+ * и отправляющий инфу в это окно */
+
+class consoleWindow {
+
+	private static JTextArea textArea; // Area for displaying console output
+	private static JTextField inputField; // Field for user input
+
+	/*
+	 * мое Консоль-Окно создается в Методе. Поэтому видимо оно и закрывается само,
+	 * конда метод заканчивает свою работу
+	 */
+
+	/* 1. Метод используется в Методах основного класса № 7 и 8 */
+
+	static void startWindow(String my) {
+
+		// Create the main frame
+
+		JFrame frame = new JFrame(my);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setSize(620, 400); // ширина и высота соответственно
+		frame.setLayout(new BorderLayout());
+
+		// Create a JTextArea for console output
+
+		textArea = new JTextArea();
+		textArea.setEditable(false); // Make it non-editable
+		JScrollPane scrollPane = new JScrollPane(textArea); // Add scrolling capability
+		frame.add(scrollPane, BorderLayout.CENTER);
+
+		// Create a JTextField for user input
+
+		inputField = new JTextField();
+		frame.add(inputField, BorderLayout.SOUTH);
+
+		// Add action listener for the input field
+
+		inputField.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+
+				String input = inputField.getText(); // Get text from input field
+
+				if (input.equalsIgnoreCase("end")) {
+					
+					toConsole("Closing the console...");
+
+					frame.dispose();
+
+					// System.exit(0);
+
+				} else {
+
+					toConsole(input); // Append to the console
+				}
+
+				inputField.setText(""); // Clear the input field
+			}
+		});
+
+		// Set up the frame visibility
+		frame.setVisible(true);
+
+	} // конец Метода 1. startWindow
+
+	/* 2. Метод используется в Методах основного класса № 5 и 6 */
+
+	static void toConsole(String text) {
+
+		textArea.append(text + "\n"); // Append text with a newline
+
+		textArea.setCaretPosition(textArea.getDocument().getLength()); // Scroll to bottom
+
+//        if (text.equals("end")) {
+//        	
+//        	toConsole("\nClosing the console...");
+//        	ServiceMethods.windowShow("the program is closing");
+//        	
+//        	System.exit(0);
+//        	 
+//        }
+
+	} // конец метода 2. toConsole
+
+} // конец 4-го Класса consoleWindow

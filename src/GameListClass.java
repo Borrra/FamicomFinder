@@ -29,24 +29,25 @@ public class GameListClass {
 
 	private List<String> FieldList;   // список отсортированный по Полю (Издатели, Мапперы и др.)
 
-	int level;          // уровень сортировки
-	int starCode;       // наличие введенного кода *_ _
+	boolean inet;		 // откуда берутся файлы
+	
+	int level;          	 // уровень сортировки
+	int starCode;       	 // наличие введенного кода *_ _
 
-	String fieldName;   // под "издетелей"
-	String searchTrace; // для отслуживания "истории" поиска
-	String key;         // то, по чему сортируем список
+	String fieldName;   	 // под "издетелей"
+	String searchTrace; 	 // для отслуживания "истории" поиска
+	String key;         	 // то, по чему сортируем список
 
-	///////////////////////////// Конструкторы ////////////////////////////////////////
+	String fileListAddress;  // текущий адрес Текст файла
+	String photoListAddress; // текущий адрес папки с фотками
 
-	/* возможно первые 2 Конструктора я удалю */
-
-	/* 1. Конструктор для формирования Полного Объекта. Использую при первоначальном
-	 * формировании Объекта, при вводе "", при вкл/выкл Интернета */
+	/* Конструктор Основной и единственный для формирования Полного Объекта */
 
 	GameListClass(AddressManager manag) {
 
 		level = 1;
 		starCode = 0;
+		inet = manag.readFrom;
 
 		fieldName = "";
 		searchTrace = "All Games";
@@ -54,63 +55,116 @@ public class GameListClass {
 
 		FieldList = new ArrayList<String>();
 		
-		if (manag.readFrom) {
+		/* если читаем с Инета и Инет есть */
+		
+		if ( manag.readFrom && manag.isInetHere )  {
 
-			GameList = readGamesFromWeb(manag);  // читаем с Инета
+			fileListAddress = manag.webFileAddress;
+			photoListAddress = manag.webPhotoAddress;
+			GameList = readGamesFromWeb();  // читаем с Инета
 			
-		} else {
+		} else { // либо Инета нет, либо читаем с Компа
 			
-			GameList = readGamesFromFile(manag); // читаем с Компа
+			inet = false;
+			
+			/* если какой-либо из адресов отсутствует надо обновлять Менеджер */
+			
+			if ( manag.fileAddress.equals("") || manag.photoFolderAddress.equals("") ) {
+				
+				this.key = "refreshManag";
+				
+			} else { // если все адреса есть 
+				
+				fileListAddress = manag.fileAddress;
+				photoListAddress = manag.photoFolderAddress;
+				GameList = readGamesFromFile(); // читаем с Компа
+			}
 		}
 	}
 
-	/* 2. Конструктор использую в InputAnalyse, когда есть совпадение по Полям
+	/* Strrer-ы */
+	
+	/* 1. буду использовать в InputAnalyse, когда есть совпадение по Полям
 	 * (creators, mappers, years) */
+	
+	GameListClass setFieldList (List<GameClass> a, String c, String b, int d) {
+		
+		GameListClass list = this;
+		
+		list.level = d;
+		list.starCode = 0;
 
-	GameListClass(List<GameClass> a, String c, String b, int d) {
-
-		level = d;
-		starCode = 0;
-
-		fieldName = c;
-		searchTrace = b;
-		key = "";
-
-		GameList = a;
-		FieldList = ServiceMethods.getFieldListNew(a, c);
+		list.fieldName = c;
+		list.searchTrace = b;
+		list.key = "";
+		
+		list.GameList = a;
+		list.FieldList = ServiceMethods.getFieldListNew(a, c);
+		
+		return list;
 	}
 	
-	/* 3. Конструктор использую в методе objectSorting ) */
+	/* 2. Буду использовать в методе objectSorting */
+	
+	GameListClass setGameList (List<GameClass> a, int b, String c, String d) {
+		
+		GameListClass list = this;
+		
+		list.level = b;
+		list.starCode = 0;
 
-	GameListClass(List<GameClass> a, int b, String c, String d) {
+		list.fieldName = "";
+		list.searchTrace = d;
+		list.key = c;
 
-		level = b;
-		starCode = 0;
-
-		fieldName = "";
-		searchTrace = d;
-		key = c;
-
-		GameList = a;
-		FieldList = new ArrayList<String>();
+		list.GameList = a;
+		list.FieldList = new ArrayList<String>();
+		
+		return list;
 	}
 	
-	/* 4. Конструктор "Пустой" использую для закрытия программы
+	/* 3. Метод восстанавливающий Полный список игр.
+	 * Буду использовать в mouseChooseWindow() */
+	
+	GameListClass setFullList () {
+		
+		GameListClass list = this;
+		
+		list.level = 1;
+		list.starCode = 0;
+
+		list.fieldName = "";
+		list.searchTrace = "All Games";
+		list.key = "All Games";
+
+		list.FieldList = new ArrayList<String>();
+		
+		/* если читаем с Инета и инет есть */
+		
+		if ( list.inet && AddressManager.isInetAvalible() ) {
+			
+			GameList = readGamesFromWeb();  // читаем с Инета
+			
+		} else { // если читаем с Компа или Инета нет
+
+			list.key = "refreshManag";
+		}
+		
+		return list;
+	}
+	
+	/* 4. Метод "Пустой" использую для закрытия программы
 	 * если ТекстФайл не нашелся в методе inputAnalyse */
-
-	GameListClass () {
-
-		level = 1;
-		starCode = 0;
-
-		fieldName = "";
-		searchTrace = "";
-		key = "end";
-
-		GameList = new ArrayList <GameClass>();
-		FieldList = new ArrayList<String>();
+	
+	GameListClass setEndList () {
+		
+		GameListClass list = this;
+		
+		list.key = "end";
+		
+		return list;
 	}
-
+	
 	/* Getter-ы */
 
 	public List <GameClass> getGameList () {
@@ -145,25 +199,25 @@ public class GameListClass {
 		this.key = k;
 	}
 
-	/* 1.1 Наш метод который будет считывать данные (с файла на компе),
+	/* 1.1. Наш метод который будет считывать данные (с файла на компе),
 	 * формировать Коллекцию Игр. Применяю в Конструкторе №1 */
 
-	private List<GameClass> readGamesFromFile(AddressManager manag) {
+	private List<GameClass> readGamesFromFile() {
 
 		List<GameClass> games = new ArrayList<>();
 
 		/* если адрес ТекстФайла не найден, читать ничего не надо, возвращаем
 		 * пустой лист */
 		
-		if (manag.fileAddress.equals("")) {
-			
-			return games;
-		}
+//		if (fileListAddress.equals("")) {
+//			
+//			return games;
+//		}
 		
 		/* здесь нужно вообще сделать проверку адреса и если файл существует
 		 * только тогда, начинать считывание */
 		
-		try (BufferedReader br = new BufferedReader(new FileReader(manag.fileAddress))) {
+		try (BufferedReader br = new BufferedReader(new FileReader(fileListAddress))) {
 
 			/* заводим 3 переменные, перед циклом, значит они "глобальные" по отношению к
 			 * циклу. В result будем объеденять строки, относящиеся к одному объекту */
@@ -280,7 +334,7 @@ public class GameListClass {
 
 					String name = parts[0];
 
-					GameClass person = new GameClass(manag, name);
+					GameClass person = new GameClass(photoListAddress, name);
 					games.add(person);
 				}
 
@@ -289,7 +343,7 @@ public class GameListClass {
 					String name = parts[0];
 					String creator = parts[1];
 
-					GameClass person = new GameClass(manag, name, creator);
+					GameClass person = new GameClass(photoListAddress, name, creator);
 					games.add(person);
 				}
 
@@ -299,7 +353,7 @@ public class GameListClass {
 					String creator = parts[1];
 					String year = parts[2];
 
-					GameClass person = new GameClass(manag, name, creator, year);
+					GameClass person = new GameClass(photoListAddress, name, creator, year);
 					games.add(person);
 				}
 
@@ -310,7 +364,7 @@ public class GameListClass {
 					String mapper = parts[2];
 					String year = parts[3];
 
-					GameClass person = new GameClass(manag, name, creator, mapper, year);
+					GameClass person = new GameClass(photoListAddress, name, creator, mapper, year);
 					games.add(person);
 				}
 
@@ -322,7 +376,7 @@ public class GameListClass {
 					String year = parts[3];
 					String comment = parts[4];
 
-					GameClass person = new GameClass(manag, name, creator, mapper, year, comment);
+					GameClass person = new GameClass(photoListAddress, name, creator, mapper, year, comment);
 					games.add(person);
 				}
 
@@ -351,7 +405,7 @@ public class GameListClass {
 
 					/* создаем объект используя "универсальный" конструктор */
 
-					GameClass person = new GameClass(manag, name, creator, mapper, year, comment, pik);
+					GameClass person = new GameClass(photoListAddress, name, creator, mapper, year, comment, pik);
 					games.add(person); // добавляем объект в список games
 				}
 
@@ -376,12 +430,12 @@ public class GameListClass {
 
 		return games;
 
-	} // конец Метода
-
+	} // конец Метода 1.1.
+	
 	/* 1.2 Наш метод который будет считывать данные (с файла на GitHub),
 	 * формировать Коллекцию Игр. Применяю в Конструкторе №3 */
 	
-	private List<GameClass> readGamesFromWeb (AddressManager manag) {
+	private List<GameClass> readGamesFromWeb () {
 
 		List<GameClass> games = new ArrayList<>();
 
@@ -389,7 +443,7 @@ public class GameListClass {
 
 			//String fileUrl = GameClass.webFileAddres; // веб адрес моего текст файла на Git Hub
 
-			String fileUrl = manag.webFileAddress;
+			String fileUrl = fileListAddress;
 			
 			// Создаем URL объект используя мой адрес
 
@@ -527,7 +581,7 @@ public class GameListClass {
 
 						String name = parts[0];
 
-						GameClass person = new GameClass(manag, name);
+						GameClass person = new GameClass(photoListAddress, name);
 						games.add(person);
 					}
 
@@ -536,7 +590,7 @@ public class GameListClass {
 						String name = parts[0];
 						String creator = parts[1];
 
-						GameClass person = new GameClass(manag, name, creator);
+						GameClass person = new GameClass(photoListAddress, name, creator);
 						games.add(person);
 					}
 
@@ -546,7 +600,7 @@ public class GameListClass {
 						String creator = parts[1];
 						String year = parts[2];
 
-						GameClass person = new GameClass(manag, name, creator, year);
+						GameClass person = new GameClass(photoListAddress, name, creator, year);
 						games.add(person);
 					}
 
@@ -557,7 +611,7 @@ public class GameListClass {
 						String mapper = parts[2];
 						String year = parts[3];
 
-						GameClass person = new GameClass(manag, name, creator, mapper, year);
+						GameClass person = new GameClass(photoListAddress, name, creator, mapper, year);
 						games.add(person);
 					}
 
@@ -569,7 +623,7 @@ public class GameListClass {
 						String year = parts[3];
 						String comment = parts[4];
 
-						GameClass person = new GameClass(manag, name, creator, mapper, year, comment);
+						GameClass person = new GameClass(photoListAddress, name, creator, mapper, year, comment);
 						games.add(person);
 					}
 
@@ -598,7 +652,7 @@ public class GameListClass {
 
 						/* создаем объект используя "универсальный" конструктор */
 
-						GameClass person = new GameClass(manag, name, creator, mapper, year, comment, pik);
+						GameClass person = new GameClass(photoListAddress, name, creator, mapper, year, comment, pik);
 						games.add(person); // добавляем объект в список games
 					}
 
@@ -626,10 +680,10 @@ public class GameListClass {
 
 		games.sort(new MyNameCompNew());
 		// games.sort(new MyYearComp());
-
+		
 		return games;
 
-	} // конец единственного Метода readGamesFromWeb
+	} // конец Метода readGamesFromWeb
 	
 	/* 2. Метод принимает от пользователя Фразу и обрабатывает ее, выбирая тот или
 	 * иной Конструктор, т.е. формируя объект с новыми данными в полях и новыми
@@ -637,15 +691,14 @@ public class GameListClass {
 
 	public GameListClass inputAnalyse(AddressManager manag) {
 
-		/* условия для обработки Менеджера, у которого отсутвтвует адрес
-		 * ТестФайла. Конструктор №4 создан как раз для этого условия.
-		 * Здесь поле key задается равным "end" для окончания проги */
+		/* если например предыдущий метод (mouseChooseWindow) применит setFullList,
+		 * там key равен "refreshManag" и чтобы этот метод (inputAnalyse) сразу
+		 * передавал объект дальше в блок обновления Менеджера и применяется это
+		 * условие */
 		
-		if ( manag.fileAddress.equals("") ) {
+		if ( key.equals("refreshManag") ) {
 			
-			GameListClass list = new GameListClass(); // Констр. №4
-			
-			return list;
+			return this;
 		}
 		
 		/* если список Игр пуст, значит ничего не нашлось, а значит нужно
@@ -653,7 +706,8 @@ public class GameListClass {
 		
 		if (this.GameList.size()==0) {
 
-			GameListClass list = new GameListClass(manag); // Констр. №1
+			//GameListClass list = new GameListClass(manag); // Констр. №1
+			GameListClass list = this.setFullList();
 			
 			return list;
 		}
@@ -679,8 +733,10 @@ public class GameListClass {
 
 			/* используем Конструктор № 2 */
 			
-			GameListClass list = new GameListClass(this.GameList, "creator", searchTrace, level);
+			//GameListClass list = new GameListClass(this.GameList, "creator", searchTrace, level);
 
+			GameListClass list = this.setFieldList(this.GameList, "creator", searchTrace, level);
+			
 			return list;
 		}
 
@@ -690,7 +746,9 @@ public class GameListClass {
 
 			/* используем Конструктор № 2 */
 			
-			GameListClass list = new GameListClass(this.GameList, "mapper", searchTrace, level);
+			//GameListClass list = new GameListClass(this.GameList, "mapper", searchTrace, level);
+			
+			GameListClass list = this.setFieldList(this.GameList, "mapper", searchTrace, level);
 
 			return list;
 		}
@@ -701,7 +759,9 @@ public class GameListClass {
 
 			/* используем Конструктор № 2 */
 			
-			GameListClass list = new GameListClass(this.GameList, "year", searchTrace, level);
+			//GameListClass list = new GameListClass(this.GameList, "year", searchTrace, level);
+			
+			GameListClass list = this.setFieldList(this.GameList, "year", searchTrace, level);
 
 			return list;
 		}
@@ -712,17 +772,19 @@ public class GameListClass {
 		/* 4. если вводим "InetOff"  */
 
 		else if (key.equals("InetOff")) {
-			
+
 			/* используя метод setReadFrom устанавливаем значение поля readFrom менеджера = false
 			 * и передаем получившийся Менеджер в Конструктор №1 => поиск с Компа */
 			
-			manag = manag.setReadFrom(0);
+			//manag = manag.setReadFrom(0);
 			
-			/* используем Констуктор №1 */
+			/* присваиваем "refreshManag" key, чтобы Менеджер в main обновился,
+			 * т.е. заполнил поля fileAddress and photoAddress, найля их на компе или скачав
+			 * их с Инета */
 			
-			GameListClass list = new GameListClass(manag);
+			this.key = "refreshManag";
 
-			return list;
+			return this;
 		}
 
 		/* 5. если вводим "InetOn" переменная webOrNot = 0 и как-бы включаем закачку
@@ -758,18 +820,28 @@ public class GameListClass {
 		
 		else if ( key.equals("listInfo") ) {
 			
-			this.getInfo(manag);
+			this.getInfo();
 
 			return this; // возвращаем этот же Список
 		}
 
+		/* 8. при вводе Info - показываем состояние Списка */
+		
+		else if ( key.equals("Info") ) {
+			
+			ServiceMethods.informWindow();
+
+			return this; // возвращаем этот же Список
+		}
+		
 		/* 8. Условие по обновлению Списка до полного */
 		
 		else if ( key.equals("") ) {
 
 			/* используем Конструктор № 1 */
 			
-			GameListClass list = new GameListClass(manag);
+			//GameListClass list = new GameListClass(manag);
+			GameListClass list = this.setFullList();
 
 			return list;
 		}
@@ -816,9 +888,10 @@ public class GameListClass {
 
 		/* 10. Условие по обновлению ТекстФайла по вводу "refreshFile" */
 		
-		else if ( key.equals("refreshFile") && manag.isInetHere && !manag.fileAddress.equals("") ) {
+		//else if ( key.equals("refreshFile") && manag.isInetHere && !manag.fileAddress.equals("") ) {
+		else if ( key.equals("refreshFile") && manag.isInetHere ) {
 			
-			GitSiteSynchronize synch = new GitSiteSynchronize ();
+			GitHubSynchronize synch = new GitHubSynchronize ();
 			
 			synch.refreshTextFile(manag);
 			
@@ -831,7 +904,7 @@ public class GameListClass {
 		
 		else if ( key.equals("refreshPhoto") && manag.isInetHere) {
 			
-			GitSiteSynchronize synch = new GitSiteSynchronize ();
+			GitHubSynchronize synch = new GitHubSynchronize ();
 			
 			synch.downloadDiffArray(manag);
 			
@@ -848,14 +921,17 @@ public class GameListClass {
 
 			return this;
 		}
-	
+
 		/* 13. Дефолтное условие, если предидущие условия не выполены, значит
 		 * проводим Сортировку */
 		
 		else {
 
-			GameListClass list = objectSorting();
+			GameListClass list = this;
 
+			list = list.objectSorting();
+			//ServiceMethods.windowShow(list.getGameList().get(0).getPics()[0]);
+			
 			return list;
 		}
 
@@ -920,8 +996,10 @@ public class GameListClass {
 
 			/* используем Конструктор №3 */
 
-			GameListClass list = new GameListClass(objectList, level, this.key, searchTrace);
+			//GameListClass list = new GameListClass(objectList, level, this.key, searchTrace);
 
+			GameListClass list = this.setGameList(objectList, level, this.key, searchTrace);
+			
 			return list;
 
 		}
@@ -962,8 +1040,10 @@ public class GameListClass {
 
 					/* используем Конструктор №3 */
 					
-					GameListClass list = new GameListClass(objectList, level, this.key, searchTrace);
+					//GameListClass list = new GameListClass(objectList, level, this.key, searchTrace);
 
+					GameListClass list = this.setGameList(objectList, level, this.key, searchTrace);
+					
 					return list;
 
 				}
@@ -991,8 +1071,10 @@ public class GameListClass {
 
 					/* используем Конструктор №3 */
 					
-					GameListClass list = new GameListClass(objectList, level, this.key, searchTrace);
+					//GameListClass list = new GameListClass(objectList, level, this.key, searchTrace);
 
+					GameListClass list = this.setGameList(objectList, level, this.key, searchTrace);
+					
 					return list;
 
 				}
@@ -1006,23 +1088,27 @@ public class GameListClass {
 
 		/* используем Конструктор №3 */
 		
-		GameListClass list = new GameListClass(objectList, level, this.key, searchTrace);
+		//GameListClass list = new GameListClass(objectList, level, this.key, searchTrace);
+		
+		GameListClass list = this.setGameList(objectList, level, this.key, searchTrace);
 
 		return list;
 
 	} // конец Метода 3. objectSorting
-
+	
 	/* 4. Метод по выводу Списка GameClass в Окно (JOptionPane) со
 	 * Слайдером и возможностью выбора элементов из этого списка Мышью.
 	 * Вот над созданием этого метода (Окна) я бился долгие месяцы! */
 	
-	public GameListClass mouseChooseWindow(AddressManager manag) {
+	public GameListClass mouseChooseWindow() {
 
 		/* если метод видит "end" - ничего не показывает, и в main - конец проги */
 		
 		if ( this.key.equals("end") || this.key.equals("конец") ) {
 
-			GameListClass list = new GameListClass(); // Констр. №4
+			//GameListClass list = new GameListClass(); // Констр. №4
+			
+			GameListClass list = setEndList();
 			
 			return list;
 		}
@@ -1032,14 +1118,14 @@ public class GameListClass {
 		
 		if ( this.starCode!=0 ) {
 			
-			this.GameList.get(this.starCode-1).showPics(manag);
+			this.GameList.get(this.starCode-1).showPics(this.inet);
 			
 			this.starCode = 0;
 			
 			/* благодаря возврату this.mouseChooseWindow мы можем выбирать старКодом
 			 * сколько угодно раз из одного Списка */
 			
-			return this.mouseChooseWindow(manag);
+			return this.mouseChooseWindow();
 		}
 
 		/* создаем Список под строки: либо названий Игр, либо Издателей */
@@ -1095,6 +1181,7 @@ public class GameListClass {
 		
 		List <GameClass> list = this.getGameList();
 		List <String>   clist = this.getFieldList();
+		boolean subList = this.inet;
 			
 		////////////////////////// Регистрация Приемника ///////////////////////////////
 
@@ -1138,7 +1225,7 @@ public class GameListClass {
 
 						GameClass shit = list.get(index-1);
 
-						shit.showPics(manag); // показываем фотографии Объекта (игры)
+						shit.showPics(subList); // показываем фотографии Объекта (игры)
 						
 					/* в обратном случае - в списке "Издателей" что-то есть, а значит берем индекс,
 					 * пишем в глобальную переменную и закрываем это окно */
@@ -1197,12 +1284,14 @@ public class GameListClass {
 	
 		if (this.GameList.size()==1) {
 			
-			this.GameList.get(0).showPics(manag);
+			this.GameList.get(0).showPics(this.inet);
 			
 			/* используем Конструктор №1 */
 			
-			GameListClass retList = new GameListClass(manag);
+			//GameListClass retList = new GameListClass(manag);
 
+			GameListClass retList = this.setFullList();
+					
 			return retList;
 		}
 
@@ -1222,7 +1311,8 @@ public class GameListClass {
 			
 			ind = 0; 
 
-			GameListClass xlist = this.objectSorting().mouseChooseWindow(manag);
+			//GameListClass xlist = this.objectSorting().mouseChooseWindow(manag);
+			GameListClass xlist = this.objectSorting().mouseChooseWindow();
 			
 			return xlist;
 			
@@ -1234,19 +1324,21 @@ public class GameListClass {
 			return this;
 		}
 
-	} // конец Метода 4. mouseChooseWindow()
+	} // конец Метода 4.2 mouseChooseWindow()
 	
 	/* 5. Метод для чека - что содержит наш Оьъект */
 
-	public void getInfo(AddressManager manag) {
+	public void getInfo() {
 		
 		if (this.key.equals("end") ) return;
 
 		String text = "Level: " + level + "\n"
 
 				+ "Key: " + key + "\n" + "fieldName: " + fieldName + "\n" + "searchTrace: " + searchTrace + "\n"
-				+ "starCode: " + starCode + "\n" + "read from Inet: " + manag.readFrom + "\n" + "GameListSize: "
-				+ GameList.size() + "\n" + "FieldListSize: " + FieldList.size() + "\n";
+				+ "starCode: " + starCode + "\n" + "read from Inet: " + inet + "\n" + "GameListSize: "
+				+ GameList.size() + "\n" + "FieldListSize: " + FieldList.size() + "\n"
+				+ "fileListAddress: " + fileListAddress + "\n"
+				+ "fileListAddress: " + photoListAddress + "\n";
 
 		JTextArea textArea = new JTextArea(text);
 		textArea.setEditable(false);

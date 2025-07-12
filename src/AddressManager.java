@@ -70,35 +70,35 @@ public class AddressManager {
 
 	/* переменная для адреса Интернет сайта, по которому проверяем наличие Интернета */
 
-	final String inetChecking = "http://www.google.com";
+	static String inetChecking = "http://www.google.com";
 	
 	/* это переменная для названия тестового файла, который создается, чтобы хранить
 	 * адреса файлов  */
 
 	final String v = "InfoFile.txt";
 
-	/* 1. Первый Конструктор, начальный, когда файлы на Рабочем Строле */
+	/* 1. Первый Конструктор, начальный */
 	
 	AddressManager () {
 		
-		readFrom = false;
+		readFrom = true;
 		
 		isInetHere = isInetAvalible ();
 		
-		fileAddress = desktopPath + File.separator + projectFolderName + File.separator + textFileName;
+		fileAddress = "";
 		
-		photoFolderAddress = desktopPath + File.separator + projectFolderName + File.separator + photoFolderName;
+		photoFolderAddress = "";
 		
 		webPhotoAddress = webPhAddr;
 		
-		webFileAddress = webFlAddr;	
+		webFileAddress = webFlAddr;
 	}
 	
 	/* 2. Второй Конструктор, когда есть адрес Текст Файла, а адреса Папки с фотками нет */
 	
 	AddressManager (String txtFile, int a) {
 		
-		readFrom = false;
+		readFrom = true;
 		
 		isInetHere = isInetAvalible ();
 		
@@ -115,7 +115,7 @@ public class AddressManager {
 	
 	AddressManager (int a, String photoAdr) {
 		
-		readFrom = false;
+		readFrom = true;
 		
 		isInetHere = isInetAvalible ();
 		
@@ -132,7 +132,7 @@ public class AddressManager {
 	
 	AddressManager (String txtAdr, String photoAdr) {
 		
-		readFrom = false;
+		readFrom = true;
 		
 		isInetHere = isInetAvalible ();
 		
@@ -144,35 +144,17 @@ public class AddressManager {
 		
 		webFileAddress = webFlAddr;
 	}
-	
-	/* 5. Пятый Конструктор, когда вообще ничего не нашлось. Просто для отличие его
-	 * от Первого Констрктора, передадим туда число, а поля с адресами равны "" */
-	
-	AddressManager (int a) {
-		
-		readFrom = false;
-		
-		isInetHere = isInetAvalible ();
-		
-		fileAddress = "";
-		
-		photoFolderAddress = "";
-		
-		webPhotoAddress = webPhAddr;
-		
-		webFileAddress = webFlAddr;
-	}
-	
+
 	/* Setters */
 	
 	/* Метод проверяющий наличие Интернета и используемый в Конструкторах для
 	 * заполнения поля isInetHere */
 	
-	private boolean isInetAvalible () {
+	public static boolean isInetAvalible () {
 
 		try {
 
-			URL url = new URL(this.inetChecking); // передаем адрес Интернет Ресурса
+			URL url = new URL(inetChecking); // передаем адрес Интернет Ресурса
 			HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
 			// urlConnection.setDefaultRequestProperty("User-Agent", "Test");
 			// urlConnection.setDefaultRequestProperty("Connection", "close");
@@ -394,7 +376,7 @@ public class AddressManager {
 	 * текстовом файле на рабочем столе (Первый из 3-х главных методов этого Класса)
 	 * Используется в Методе №7.*/
 	
-	private AddressManager compFilesAnalyzer () {
+	public AddressManager compFilesAnalyzer () {
 
 		/* создадим Объекты класса File с нужными нам адресами, а затем проверим их на
 		 * существование, если все существуют используем Конструктор № 3, если нет то будем
@@ -426,11 +408,7 @@ public class AddressManager {
 		
 		if (find_TextFile.exists() && find_PhotoFolder.exists()) {
 
-			//ServiceMethods.windowShow(photoAdr);
-			
-			AddressManager manager = new AddressManager (txtAdr, photoAdr);
-			
-			//manager.showManagInfo();
+			AddressManager manager = new AddressManager (txtAdr, photoAdr); // Конструктор №4
 			
 			return manager;
 		}
@@ -451,9 +429,7 @@ public class AddressManager {
 			AddressManager manager = new AddressManager (txtAdr, 1); // Конструктор №2
 			
 			manager = manager.checkHiddenFile(1); // нужен адрес фоток
-			
-			//manager.showManagInfo();
-			
+
 			return manager;
 		}
 
@@ -473,9 +449,7 @@ public class AddressManager {
 			AddressManager manager = new AddressManager (1, photoAdr); // Конструктор №3
 			
 			manager = manager.checkHiddenFile(2); // нужен адрес текст файла
-			
-			//manager.showManagInfo();
-			
+
 			return manager;
 		}
 
@@ -485,14 +459,10 @@ public class AddressManager {
 
 			/* если нечего не нашли на рабочем, чекаем стрытый файл*/
 
-			//ServiceMethods.windowShow("На Рабочем нет ни фоток, ни текст файла, чекаем скрытый файл");
-
-			AddressManager manager = new AddressManager (0); // Метод №7
+			AddressManager manager = new AddressManager (); // Конструктор №1
 			
 			manager = manager.checkHiddenFile(0);
-			
-			//manager.showManagInfo();
-			
+
 			return manager;
 		}
 
@@ -505,8 +475,6 @@ public class AddressManager {
 	 * предидущем Методе № 4 (второй из 3-х главных методов этого Класса) */
 
 	private AddressManager checkHiddenFile(int a) {
-
-		// GameClass.windowShowString("Запущен метод по чеку скрытого файла");
 
 		/* проверим наличие на рабочем столе скрытого текстового файла (для записи в
 		 * него адресов нужных нам файлов) и при отсутствии заведм его Создаем объект
@@ -550,10 +518,8 @@ public class AddressManager {
 							.contains(photoFolderName.substring(0, photoFolderName.length() - 1))) {
 
 						AddressManager manah = new AddressManager (a23[0], a23[1]); // конструктор №4
-						
-						//manah.showManagInfo();
-						
-						System.out.println("Fist version");
+		
+						//System.out.println("Fist version");
 
 						return manah;
 					}
@@ -563,9 +529,7 @@ public class AddressManager {
 						
 						AddressManager manah = new AddressManager (a23[1], a23[0]); // конструктор №4
 						
-						System.out.println("Second version");
-
-						//manah.showManagInfo();
+						//System.out.println("Second version");
 						
 						return manah;
 					}
@@ -580,22 +544,14 @@ public class AddressManager {
 							if ( a23[0].contains(textFileName) ) {
 								
 								AddressManager manah = new AddressManager (a23[0], 1); // конструктор № 2
-							
-								//System.out.println("So.. first option"); // потом закоменчу
-
-								//manah.showManagInfo();
-							
+		
 								return manah;
 							}
 							
 							else if ( a23[0].contains(photoFolderName.substring(0, photoFolderName.length() - 1)) ) {
 								
 								AddressManager manah = new AddressManager (1, a23[0]); // конструктор № 3
-								
-								//System.out.println("So.. first option"); // потом закоменчу
-
-								//manah.showManagInfo();
-							
+		
 								return manah;
 							}
 			
@@ -606,11 +562,7 @@ public class AddressManager {
 							if (  a23[1].contains(textFileName) )  {
 								
 								AddressManager manah = new AddressManager (a23[1], 1); // конструктор №2
-							
-								//System.out.println("So.. second option"); // потом закоменчу
-							
-								//manah.showManagInfo();
-							
+	
 								return manah;
 							
 							}
@@ -618,11 +570,7 @@ public class AddressManager {
 							else if ( a23[1].contains(photoFolderName.substring(0, photoFolderName.length() - 1)) ) {
 								
 								AddressManager manah = new AddressManager (1, a23[0]); // конструктор № 3
-								
-								//System.out.println("So.. first option"); // потом закоменчу
 
-								//manah.showManagInfo();
-							
 								return manah;
 							}
 
@@ -641,10 +589,8 @@ public class AddressManager {
 						
 						AddressManager manah = new AddressManager (this.fileAddress, a23[0]); // конструктор №4
 						
-						System.out.println("i need photos, and in hidden there's two lines");
+						//System.out.println("i need photos, and in hidden there's two lines");
 
-						//manah.showManagInfo();
-						
 						return manah;
 					}
 					
@@ -652,10 +598,8 @@ public class AddressManager {
 						
 						AddressManager manah = new AddressManager (this.fileAddress, a23[1]); // конструктор №4
 						
-						System.out.println("i need photos, and in hidden there's two lines");
+						//System.out.println("i need photos, and in hidden there's two lines");
 
-						//manah.showManagInfo();
-						
 						return manah;	
 					}
 				}
@@ -669,10 +613,8 @@ public class AddressManager {
 						
 						AddressManager manah = new AddressManager (a23[0], this.photoFolderAddress); // конструктор №4
 						
-						System.out.println("i need text only, and in hidden there's two lines");
+						//System.out.println("i need text only, and in hidden there's two lines");
 
-						//manah.showManagInfo();
-						
 						return manah;
 					}
 					
@@ -680,10 +622,8 @@ public class AddressManager {
 						
 						AddressManager manah = new AddressManager (a23[1], this.photoFolderAddress); // конструктор №4
 						
-						System.out.println("i need text only, and in hidden there's two lines");
+						//System.out.println("i need text only, and in hidden there's two lines");
 
-						//manah.showManagInfo();
-						
 						return manah;	
 					}
 				}
@@ -695,11 +635,7 @@ public class AddressManager {
 					if ( findFile1.exists() && a23[0].contains( photoFolderName.substring(0, photoFolderName.length() - 1)) ) {
 						
 						AddressManager manah = new AddressManager (this.fileAddress, a23[0]); // конструктор №4
-						
-						//System.out.println("Second version");
-
-						//manah.showManagInfo();
-						
+	
 						return manah;
 					}
 				}
@@ -711,11 +647,7 @@ public class AddressManager {
 					if ( findFile1.exists() && a23[0].contains(textFileName) ) {
 						
 						AddressManager manah = new AddressManager (a23[0], this.photoFolderAddress); // конструктор №4
-						
-						//System.out.println("Second version");
 
-						//manah.showManagInfo();
-						
 						return manah;
 					}
 				}
@@ -751,13 +683,11 @@ public class AddressManager {
 	
 	private AddressManager compFilesFinder () {
 
-		// GameClass.windowShowString("Щас вошли в блок поиска.");
-
 		////////////// Блок открытия Окна длительности процесса в отдельном Потоке /////////////
 
 		SwingUtilities.invokeLater(() -> {
 
-			myWindow.procesWindow("Внимание! Идет поиск...");
+			myWindow.procesWindow("Внимание! Идет поиск файлов проекта...");
 		});
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -784,22 +714,18 @@ public class AddressManager {
 			photoList.clear();
 			
 			writingFilesToHiddingFile(manah); // пишем адреса в скрытый файл
-			
-			//System.out.println("Second version");
 
 			/* Блок закрытия окна длительности процесса */
 			
-			SwingUtilities.invokeLater(() -> {
+//			SwingUtilities.invokeLater(() -> {
+//
+//				for (Frame frame : Frame.getFrames()) {
+//
+//					frame.dispose();
+//				}
+//
+//			});
 
-				for (Frame frame : Frame.getFrames()) {
-
-					frame.dispose();
-				}
-
-			});
-			
-			//manah.showManagInfo();
-			
 			return manah;	
 		}
 
@@ -812,8 +738,6 @@ public class AddressManager {
 
 			inDirectorySearching(roots, this.textFileName);
 
-			// ServiceMethods.windowShoww(findList); // давай посмотрим что там нашлось
-
 			/* далее используем метод по обрабоке списка найденных адресов Текстовог файла и
 			 * выделения из него одного подходящего нам */
 
@@ -824,22 +748,18 @@ public class AddressManager {
 			findList.clear(); // очищаем Список
 			
 			writingFilesToHiddingFile(manah); // пишем адреса в скрытый файл
-			
-			//System.out.println("Second version");
 
 			/* Блок закрытия окна длительности процесса */
 			
-			SwingUtilities.invokeLater(() -> {
-
-				for (Frame frame : Frame.getFrames()) {
-
-					frame.dispose();
-				}
-
-			});
-			
-			//manah.showManagInfo();
-			
+//			SwingUtilities.invokeLater(() -> {
+//
+//				for (Frame frame : Frame.getFrames()) {
+//
+//					frame.dispose();
+//				}
+//
+//			});
+	
 			return manah;	
 		}
 		
@@ -852,8 +772,6 @@ public class AddressManager {
 
 			inDirectorySearching(roots,
 					this.photoFolderName.substring(0, this.photoFolderName.length() - 1));
-
-			// ServiceMethods.windowShoww(findList); // давай посмотрим что там нашлось
 
 			/*далее используем метод по обрабоке списка найденных адресов Папки с
 				 * фотографиями и выделения из него одного подходящего нам */
@@ -868,17 +786,15 @@ public class AddressManager {
 			
 			/* Блок закрытия окна длительности процесса */
 			
-			SwingUtilities.invokeLater(() -> {
-
-				for (Frame frame : Frame.getFrames()) {
-
-					frame.dispose();
-				}
-
-			});
-			
-			//manah.showManagInfo();
-			
+//			SwingUtilities.invokeLater(() -> {
+//
+//				for (Frame frame : Frame.getFrames()) {
+//
+//					frame.dispose();
+//				}
+//
+//			});
+	
 			return manah;
 		}
 
@@ -889,14 +805,14 @@ public class AddressManager {
 			
 			/* Блок закрытия окна длительности процесса */
 			
-			SwingUtilities.invokeLater(() -> {
-
-				for (Frame frame : Frame.getFrames()) {
-
-					frame.dispose();
-				}
-
-			});
+//			SwingUtilities.invokeLater(() -> {
+//
+//				for (Frame frame : Frame.getFrames()) {
+//
+//					frame.dispose();
+//				}
+//
+//			});
 			
 			return this;
 		}
@@ -1198,7 +1114,7 @@ public class AddressManager {
 					e.printStackTrace();
 				}
 
-				ServiceMethods.windowShow("Наш скрытый текст файл перезаписан.");
+				//ServiceMethods.windowShow("Наш скрытый текст файл перезаписан.");
 			}
 
 		} catch (IOException e) {
@@ -1291,13 +1207,30 @@ public class AddressManager {
 	public AddressManager setting () {
 		
 		AddressManager manag = this;
+
+		manag = manag.compFilesAnalyzer(); // анализируем Раб Стол и Скрыт файл
+		manag = manag.compFilesFinder();   // ищем файлы на компе
 		
-		manag = manag.compFilesAnalyzer().compFilesFinder().managWebRefresh();
+		/* Блок закрытия окна длительности процесса, начатого в методе
+		 * compFilesFinder(). Вынесен сюда, чтобы не влиять на другие процессы */
+		
+		SwingUtilities.invokeLater(() -> {
+
+			for (Frame frame : Frame.getFrames()) {
+
+				frame.dispose();
+			}
+
+		});
+		
+		manag = manag.managWebRefresh(); // если надо скачиваем файлы с GitHub
 		
 		if ( manag.fileAddress.equals("") ) {
 			
 			ServiceMethods.windowShow("Отсутствует файл проекта. Программа будет завершена.");
 		}
+		
+		manag = manag.setReadFrom(0); // устанвалиаем считывание с Компа
 		
 		return manag;
 	}
@@ -1365,23 +1298,20 @@ public class AddressManager {
 		
 		if ( this.fileAddress.equals("") && this.isInetHere ) {
 			
-			GitSiteSynchronize synch = new GitSiteSynchronize();
+			GitHubSynchronize synch = new GitHubSynchronize();
 			
 			this.fileAddress = synch.refreshTextFile(this);
-			
-			ServiceMethods.windowShow(this.fileAddress, "fileAddress");
 		}
 		
 		if ( this.photoFolderAddress.equals("") && this.isInetHere ) {
 			
 			if (ServiceMethods.yesNoWindow()==0) {
 				
-				GitSiteSynchronize synch = new GitSiteSynchronize();
+				GitHubSynchronize synch = new GitHubSynchronize();
 			
 				this.photoFolderAddress = synch.downloadDiffArray(this);
-			
-				ServiceMethods.windowShow(this.photoFolderAddress, "photoAddress");
-			
+				
+				ServiceMethods.windowShow("Фотки обновлены, адрес папки: " + this.photoFolderAddress);
 			}
 		}
 		
@@ -1389,7 +1319,7 @@ public class AddressManager {
 	}
 	
 	/* 14. Метод, который создает Папку Проекта на Рабочем столе
-	 * Использую здесь в 15 методе и в GitSiteSynchronize в 1 и 5 методах */
+	 * Использую здесь в 15 методе и в GitHubSynchronize в 1 и 5 методах */
 	
 	public String createProjectFolder () {
 		
@@ -1404,20 +1334,20 @@ public class AddressManager {
 			
 			if (folderCreated) { // если папка создалась - возвращаем Путь
 				
-				System.out.println("Folder created: " + folder.getAbsolutePath());
+				//System.out.println("Folder created: " + folder.getAbsolutePath());
 				
 				return folder.getAbsolutePath();
 				
 			} else { // если не создалась - возвращаем null
 				
-				System.out.println("Failed to create folder.");
+				//System.out.println("Failed to create folder.");
 				
 				return null; 
 			}
 			
 		} else {
 			
-			System.out.println("Folder already exists: " + folder.getAbsolutePath());
+			//System.out.println("Folder already exists: " + folder.getAbsolutePath());
 			
 			return folder.getAbsolutePath();
 		}
@@ -1425,7 +1355,7 @@ public class AddressManager {
 	} // конец Метода № 14
 	
 	/* 15. Метод, который создает Папку Проекта на Рабочем столе и в ней еще Папку
-	 * Использую в GitSiteSynchronize в 5 методе */
+	 * Использую в GitHubSynchronize в 5 методе */
 	
 	public String createPhotoFolder () {
 		
@@ -1446,7 +1376,7 @@ public class AddressManager {
 			
 			if (folderCreated) { // если папка создалась - возвращаем Путь
 				
-				System.out.println("Folder created: " + folder.getAbsolutePath());
+				//System.out.println("Folder created: " + folder.getAbsolutePath());
 				
 				return folder.getAbsolutePath();
 				
@@ -1454,7 +1384,7 @@ public class AddressManager {
 				
 				System.out.println("Failed to create folder.");
 				
-				return null; 
+				return ""; 
 			}
 			
 		} else {

@@ -98,8 +98,8 @@ class MyStringNameComp implements Comparator<String> {
 
 		Integer ku = 100;
 
-		String adr = GitHubSynchronize.getLastPartStartingWith(str, '/'); // должно оставить только "11.jpg" от адреса
-
+		String adr = str.substring( str.indexOf('/')+1, str.length() ); // должно оставить только "11.jpg" от адреса
+		
 		String norm = adr.substring(0, adr.indexOf('.')); // берем только номер фотки (если это номер)
 
 		/* если название фотки это число от 1 до 99 */
@@ -111,28 +111,10 @@ class MyStringNameComp implements Comparator<String> {
 
 		return ku;
 
-//			StringBuilder number = new StringBuilder();
-//				
-//			for (char c : str.toCharArray()) {
-//				
-//				if (Character.isDigit(c)) {
-//					
-//					number.append(c);
-//						
-//				} else {
-//					
-//					break; // Stop at the first non-digit character
-//				}
-//			}
-//			
-//			return number.length() > 0 ? Integer.valueOf(number.toString()) : null;
-
 	}
 
-	/*
-	 * добавил этот метод для определения число ли это или нет использую выше, для
-	 * проверки названия фотки
-	 */
+	/* добавил этот метод для определения число ли это или нет использую выше, для
+	 * проверки названия фотки */
 
 	boolean isInteger(String st) {
 
