@@ -149,7 +149,7 @@ public class GameClass {
 		}
 	}
 
-///////////////////////////// Методы моего Класса (? штук) ///////////////////////////
+///////////////////////////// Методы моего Класса ///////////////////////////
 
 	// 6 getters 
 
@@ -223,7 +223,7 @@ public class GameClass {
 		else {
 			
 			ImageIcon img;
-		
+
 			/* можно будет сделать так, что перед показом первой фотки, она по адресу
 			 * проверялась на существование, если не сущ. - не показ. остальные */
 			
@@ -235,13 +235,13 @@ public class GameClass {
 				 * нет - выходим из цикла */
 				
 				if (check.exists()) {
-					
+
 					img = new ImageIcon(pics[i]);
 					JOptionPane.showMessageDialog(null, img, "That's the Game Photo", JOptionPane.PLAIN_MESSAGE);
 					
 				} else {
-					
-					ServiceMethods.windowShow("Something's wrong with pics of this Game");
+
+					//ServiceMethods.windowShow("Something's wrong with pics of this Game");
 					break;
 				}
 			}

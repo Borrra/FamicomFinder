@@ -614,22 +614,29 @@ public class GitHubSynchronize {
 				
 			ServiceMethods.windowShoww(arr, "Папки с расхождениями: ");
 
-			consoleWindow.startWindow("Скачиваем файлы:"); // открытие окна-консоли
-			
-			for (int i=0; i<arr.length; i++) {
-			
-				arr[i].download(manag);
-			}
-			
-			
+			if (ServiceMethods.yesNoWindow("Обновляем папку с фотками (Yes) или оставляем как есть (No)")==0) {
+				
+				consoleWindow.startWindow("Скачиваем файлы:"); // открытие окна-консоли
+				
+				for (int i=0; i<arr.length; i++) {
+				
+					arr[i].download(manag);
+				}
+				
 			//////////////////Блок закрытия окна-консоли ////////////////////
 
 			SwingUtilities.invokeLater(() -> {
 
 				for (Frame frame : Frame.getFrames()) { frame.dispose(); }
 			});	
+			
 			//////////////////////////////////////////////////////////////////
+			
+			} else {
 				
+				//ServiceMethods.windowShow("Оставляем папку с фотками как есть");
+			}
+	
 			/* здесь нужно добавить слеш, так как он нужен в Менеджере,
 			 * без него фотки не будут показываться (путь неправильный) */
 			

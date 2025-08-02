@@ -65,13 +65,13 @@ public class GameListClass {
 			
 		} else { // либо Инета нет, либо читаем с Компа
 			
-			inet = false;
+			inet = false; // читаем с компа
 			
-			/* если какой-либо из адресов отсутствует надо обновлять Менеджер */
+			/* если оба из адресов отсутствует надо обновлять Менеджер */
 			
-			if ( manag.fileAddress.equals("") || manag.photoFolderAddress.equals("") ) {
+			if ( manag.fileAddress.equals("") && manag.photoFolderAddress.equals("") ) {
 				
-				this.key = "refreshManag";
+				this.key = "refreshManag"; // чтобы попасть на обновление Менеджера в main
 				
 			} else { // если все адреса есть 
 				
@@ -82,10 +82,10 @@ public class GameListClass {
 		}
 	}
 
-	/* Strrer-ы */
+	/* 4 Strrer-а */
 	
-	/* 1. буду использовать в InputAnalyse, когда есть совпадение по Полям
-	 * (creators, mappers, years) */
+	/* 1. Сеттер "Издетелей" - буду использовать в InputAnalyse, когда есть
+	 * совпадение по Полям (creators, mappers, years) */
 	
 	GameListClass setFieldList (List<GameClass> a, String c, String b, int d) {
 		
@@ -104,7 +104,7 @@ public class GameListClass {
 		return list;
 	}
 	
-	/* 2. Буду использовать в методе objectSorting */
+	/* 2. Сеттер Списка Игр - буду использовать в методе objectSorting */
 	
 	GameListClass setGameList (List<GameClass> a, int b, String c, String d) {
 		
@@ -147,7 +147,8 @@ public class GameListClass {
 			
 		} else { // если читаем с Компа или Инета нет
 
-			list.key = "refreshManag";
+			//list.key = "";
+			GameList = readGamesFromFile();
 		}
 		
 		return list;
@@ -205,14 +206,6 @@ public class GameListClass {
 	private List<GameClass> readGamesFromFile() {
 
 		List<GameClass> games = new ArrayList<>();
-
-		/* если адрес ТекстФайла не найден, читать ничего не надо, возвращаем
-		 * пустой лист */
-		
-//		if (fileListAddress.equals("")) {
-//			
-//			return games;
-//		}
 		
 		/* здесь нужно вообще сделать проверку адреса и если файл существует
 		 * только тогда, начинать считывание */
@@ -702,11 +695,10 @@ public class GameListClass {
 		}
 		
 		/* если список Игр пуст, значит ничего не нашлось, а значит нужно
-		 * обновлять список - используем Конструктор №1 */
+		 * обновлять список */
 		
 		if (this.GameList.size()==0) {
 
-			//GameListClass list = new GameListClass(manag); // Констр. №1
 			GameListClass list = this.setFullList();
 			
 			return list;
@@ -717,9 +709,10 @@ public class GameListClass {
 		key = JOptionPane.showInputDialog(null, searchTrace + "->", "Input Window",
 				JOptionPane.QUESTION_MESSAGE); // вводим слово в окно
 
-		/* записываем введенное с клавы в "историю поиска", если это не старКод */
+		/* записываем введенное с клавы в "историю поиска", если:
+		 * это не старКод, не listInfo и не managInfo */
 
-		if ( !key.startsWith("*") ) {
+		if ( !key.startsWith("*") && !key.equals("listInfo") && !key.equals("managInfo") && !key.equals("Info") ) {
 			
 			searchTrace = searchTrace + "->" + key;
 		}
@@ -731,9 +724,7 @@ public class GameListClass {
 
 		if (key.equals("creators") || (key.equals("издатели"))) {
 
-			/* используем Конструктор № 2 */
-			
-			//GameListClass list = new GameListClass(this.GameList, "creator", searchTrace, level);
+			/* используем Сеттер "Издателей" */
 
 			GameListClass list = this.setFieldList(this.GameList, "creator", searchTrace, level);
 			
@@ -744,10 +735,8 @@ public class GameListClass {
 
 		else if (key.equals("mappers") || (key.equals("мапперы"))) {
 
-			/* используем Конструктор № 2 */
-			
-			//GameListClass list = new GameListClass(this.GameList, "mapper", searchTrace, level);
-			
+			/* используем Сеттер "Издателей" */
+
 			GameListClass list = this.setFieldList(this.GameList, "mapper", searchTrace, level);
 
 			return list;
@@ -757,10 +746,8 @@ public class GameListClass {
 
 		else if (key.equals("years") || (key.equals("года")) || (key.equals("годы"))) {
 
-			/* используем Конструктор № 2 */
-			
-			//GameListClass list = new GameListClass(this.GameList, "year", searchTrace, level);
-			
+			/* используем Сеттер "Издателей" */
+
 			GameListClass list = this.setFieldList(this.GameList, "year", searchTrace, level);
 
 			return list;
@@ -840,8 +827,8 @@ public class GameListClass {
 
 			/* используем Конструктор № 1 */
 			
-			//GameListClass list = new GameListClass(manag);
-			GameListClass list = this.setFullList();
+			GameListClass list = new GameListClass(manag);
+			//GameListClass list = this.setFullList();
 
 			return list;
 		}
@@ -994,14 +981,11 @@ public class GameListClass {
 
 		if (w > 0) {
 
-			/* используем Конструктор №3 */
-
-			//GameListClass list = new GameListClass(objectList, level, this.key, searchTrace);
+			/* используем Сеттер Списка Игр */
 
 			GameListClass list = this.setGameList(objectList, level, this.key, searchTrace);
 			
 			return list;
-
 		}
 		
 		// если что-то нашлось - возвращаем этот список
@@ -1038,15 +1022,14 @@ public class GameListClass {
 
 				if (w > 0) {
 
-					/* используем Конструктор №3 */
-					
-					//GameListClass list = new GameListClass(objectList, level, this.key, searchTrace);
+					/* используем Сеттер Списка Игр */
 
 					GameListClass list = this.setGameList(objectList, level, this.key, searchTrace);
 					
 					return list;
 
 				}
+				
 				// если что-то нашлось - возвращаем этот список
 
 				/////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1069,27 +1052,22 @@ public class GameListClass {
 
 				if (w > 0) {
 
-					/* используем Конструктор №3 */
-					
-					//GameListClass list = new GameListClass(objectList, level, this.key, searchTrace);
+					/* используем Сеттер Списка Игр */
 
 					GameListClass list = this.setGameList(objectList, level, this.key, searchTrace);
 					
 					return list;
-
 				}
-				//; // если что-то нашлось - возвращаем этот список
-
+				
+				// если что-то нашлось - возвращаем этот список
 			}
 
 		} // конец if (a.length()>0) - основного
 
 		//////////////////////////////////////////////////////////////////////////////////////////////////////
 
-		/* используем Конструктор №3 */
-		
-		//GameListClass list = new GameListClass(objectList, level, this.key, searchTrace);
-		
+		/* используем Сеттер Списка Игр */
+
 		GameListClass list = this.setGameList(objectList, level, this.key, searchTrace);
 
 		return list;
@@ -1145,12 +1123,15 @@ public class GameListClass {
 			
 		} else {
 		
-			// создаем Массив Строк "y" из нашего Массива Объектов
+			if ( this.getGameList()!=null ) {
+				
+				// создаем Массив Строк "y" из нашего Массива Объектов
 
-			for (int i = 0; i < this.getGameList().size(); i++) {
+				for (int i = 0; i < this.getGameList().size(); i++) {
 
-				y.add(this.getGameList().get(i).getName());
-			}
+					y.add(this.getGameList().get(i).getName());
+				}		
+			} 
 		}
 		
 		// добавляем наш Массив Строк 'y' в наш JList
@@ -1272,11 +1253,20 @@ public class GameListClass {
 		
 		int listSize = 0;
 		
+		/* если в списке издателей что-то есть */
+		
 		if (this.FieldList.size()!=0) {
 			
 			listSize = this.FieldList.size();
 			
-		} else listSize = this.GameList.size();
+		} 
+		
+		/* если в списке издателей ничего и в играх ничего */
+		
+		else if (this.FieldList.size()==0  && this.GameList.size()!=0) {
+			
+			listSize = this.GameList.size();
+		}
 	
 		JOptionPane.showMessageDialog(null, scrollPane, listSize + " pcs : " + searchTrace, JOptionPane.PLAIN_MESSAGE);
 		
@@ -1338,7 +1328,7 @@ public class GameListClass {
 				+ "starCode: " + starCode + "\n" + "read from Inet: " + inet + "\n" + "GameListSize: "
 				+ GameList.size() + "\n" + "FieldListSize: " + FieldList.size() + "\n"
 				+ "fileListAddress: " + fileListAddress + "\n"
-				+ "fileListAddress: " + photoListAddress + "\n";
+				+ "photoFolderAddress: " + photoListAddress + "\n";
 
 		JTextArea textArea = new JTextArea(text);
 		textArea.setEditable(false);

@@ -3,13 +3,13 @@ public class MyGameSearcher {
 
 	public static void main(String[] args) {
 
-		/* создаем Менеджер адресов */
+		/* создаем Менеджер адресов пока только с web адресами */
 		
 		AddressManager manager = new AddressManager();
 
 		/* создаем Объект нашего Списочного класса */
 		
-		GameListClass obj = new GameListClass (manager);  // Конструктор №1
+		GameListClass obj = new GameListClass (manager);
 
 		/* глвыный цикл программы */
 		
@@ -25,11 +25,11 @@ public class MyGameSearcher {
 				
 				manager = manager.setting();
 
-				obj = new GameListClass (manager);
+				/* на основе обновленого Менеждера обновляем объект */
 				
-				continue;
+				obj = new GameListClass (manager);
 			}
-			
+
 			/* 2. выводим на экран список Игр, если же заполнен
 			 * список Полей, выводим его */
 

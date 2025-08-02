@@ -684,7 +684,8 @@ public class AddressManager {
 	private AddressManager compFilesFinder () {
 
 		////////////// Блок открытия Окна длительности процесса в отдельном Потоке /////////////
-
+		/* закрыние уже будет в методе setting */
+		
 		SwingUtilities.invokeLater(() -> {
 
 			myWindow.procesWindow("Внимание! Идет поиск файлов проекта...");
@@ -714,18 +715,7 @@ public class AddressManager {
 			photoList.clear();
 			
 			writingFilesToHiddingFile(manah); // пишем адреса в скрытый файл
-
-			/* Блок закрытия окна длительности процесса */
 			
-//			SwingUtilities.invokeLater(() -> {
-//
-//				for (Frame frame : Frame.getFrames()) {
-//
-//					frame.dispose();
-//				}
-//
-//			});
-
 			return manah;	
 		}
 
@@ -749,17 +739,6 @@ public class AddressManager {
 			
 			writingFilesToHiddingFile(manah); // пишем адреса в скрытый файл
 
-			/* Блок закрытия окна длительности процесса */
-			
-//			SwingUtilities.invokeLater(() -> {
-//
-//				for (Frame frame : Frame.getFrames()) {
-//
-//					frame.dispose();
-//				}
-//
-//			});
-	
 			return manah;	
 		}
 		
@@ -783,18 +762,7 @@ public class AddressManager {
 			findList.clear(); // очищаем Список
 			
 			writingFilesToHiddingFile(manah); // пишем адреса в скрытый файл
-			
-			/* Блок закрытия окна длительности процесса */
-			
-//			SwingUtilities.invokeLater(() -> {
-//
-//				for (Frame frame : Frame.getFrames()) {
-//
-//					frame.dispose();
-//				}
-//
-//			});
-	
+
 			return manah;
 		}
 
@@ -802,18 +770,7 @@ public class AddressManager {
 		 * т.е. когда адреса есть - значит возвращаем Объект как есть: this */
 		
 		else {
-			
-			/* Блок закрытия окна длительности процесса */
-			
-//			SwingUtilities.invokeLater(() -> {
-//
-//				for (Frame frame : Frame.getFrames()) {
-//
-//					frame.dispose();
-//				}
-//
-//			});
-			
+
 			return this;
 		}
 
@@ -1228,6 +1185,8 @@ public class AddressManager {
 		if ( manag.fileAddress.equals("") ) {
 			
 			ServiceMethods.windowShow("Отсутствует файл проекта. Программа будет завершена.");
+			
+			return manag;
 		}
 		
 		manag = manag.setReadFrom(0); // устанвалиаем считывание с Компа
@@ -1301,17 +1260,28 @@ public class AddressManager {
 			GitHubSynchronize synch = new GitHubSynchronize();
 			
 			this.fileAddress = synch.refreshTextFile(this);
+			
 		}
+		
+		else if ( this.fileAddress.equals("") && !this.isInetHere ) {
+			
+			ServiceMethods.windowShow("текст файла нет и инета нет"); 
+		}
+		
 		
 		if ( this.photoFolderAddress.equals("") && this.isInetHere ) {
 			
-			if (ServiceMethods.yesNoWindow()==0) {
+			if (ServiceMethods.yesNoWindow("Фоток на компе нет. Скачиваем с Инета (Yes) или продолжаем без них (No)")==0) {
 				
 				GitHubSynchronize synch = new GitHubSynchronize();
 			
 				this.photoFolderAddress = synch.downloadDiffArray(this);
 				
 				ServiceMethods.windowShow("Фотки обновлены, адрес папки: " + this.photoFolderAddress);
+				
+			} else {
+				
+				ServiceMethods.windowShow("Фотографий нигде нет");
 			}
 		}
 		

@@ -420,11 +420,11 @@ public class ServiceMethods {
 	/* 14. Простой Метод Да/Нет, возвращает 0 - если Да, 1 - если Нет, и -1 - если
 	 * Крестик Использую в main для выбора скачивания или нет фоток с инета */
 
-	public static int yesNoWindow() {
+	public static int yesNoWindow(String b) {
 
 		// Show a dialog with Yes and No options
 
-		int response = JOptionPane.showConfirmDialog(null, "Фоток на компе нет. Скачиваем с Инета (Yes) или продолжаем без них (No)", "Выберите вариант",
+		int response = JOptionPane.showConfirmDialog(null, b, "Выберите вариант",
 				JOptionPane.YES_NO_OPTION);
 
 		return response;
