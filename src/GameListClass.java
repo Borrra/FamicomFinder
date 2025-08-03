@@ -147,8 +147,7 @@ public class GameListClass {
 			
 		} else { // если читаем с Компа или Инета нет
 
-			//list.key = "";
-			GameList = readGamesFromFile();
+			GameList = readGamesFromFile(); // читаем с Компа
 		}
 		
 		return list;
@@ -766,8 +765,8 @@ public class GameListClass {
 			//manag = manag.setReadFrom(0);
 			
 			/* присваиваем "refreshManag" key, чтобы Менеджер в main обновился,
-			 * т.е. заполнил поля fileAddress and photoAddress, найля их на компе или скачав
-			 * их с Инета */
+			 * т.е. заполнил поля fileAddress and photoAddress, найдя их на компе или скачав
+			 * их с Инета и там же manag = manag.setReadFrom(0) - т.е. поиск с Компа */
 			
 			this.key = "refreshManag";
 
@@ -828,7 +827,6 @@ public class GameListClass {
 			/* используем Конструктор № 1 */
 			
 			GameListClass list = new GameListClass(manag);
-			//GameListClass list = this.setFullList();
 
 			return list;
 		}
@@ -1084,7 +1082,7 @@ public class GameListClass {
 		
 		if ( this.key.equals("end") || this.key.equals("конец") ) {
 
-			//GameListClass list = new GameListClass(); // Констр. №4
+			//End-Сеттер
 			
 			GameListClass list = setEndList();
 			
@@ -1301,7 +1299,6 @@ public class GameListClass {
 			
 			ind = 0; 
 
-			//GameListClass xlist = this.objectSorting().mouseChooseWindow(manag);
 			GameListClass xlist = this.objectSorting().mouseChooseWindow();
 			
 			return xlist;
@@ -1339,6 +1336,7 @@ public class GameListClass {
 
 		JOptionPane.showMessageDialog(null, scrollPane, "That's what we have here: ",
 				JOptionPane.PLAIN_MESSAGE);
-	}
+		
+	} // конец 5 Метода getInfo()
 
 } // конец Класса GameListClass

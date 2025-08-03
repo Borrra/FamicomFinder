@@ -10,8 +10,8 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
+//import javax.swing.event.ListSelectionEvent;
+//import javax.swing.event.ListSelectionListener;
 
 import java.lang.reflect.Field;
 
@@ -417,8 +417,11 @@ public class ServiceMethods {
 
 	} // конец Метода № 13
 
-	/* 14. Простой Метод Да/Нет, возвращает 0 - если Да, 1 - если Нет, и -1 - если
-	 * Крестик Использую в main для выбора скачивания или нет фоток с инета */
+	/* 14. Простой Метод Да/Нет, возвращает 0 - если Да, 1 - если Нет, и -1 - если Крестик.
+	 * Аргументом передается строка, где написано, что выбираем.
+	 * Метод Использую в:
+	 * - Класс AddressManager, 13 метод managWebRefresh
+	 * - Класс GitHubSynchronize, 5 метод public String downloadDiffArray (AddressManager manag) */
 
 	public static int yesNoWindow(String b) {
 

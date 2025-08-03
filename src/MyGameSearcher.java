@@ -15,7 +15,7 @@ public class MyGameSearcher {
 		
 		while (!obj.key.equals("end") && !obj.key.equals("конец") ) {
 
-			/* 1. анализируем Ввод, заполняем поля объекта, составляем Списки */
+			/* 1. анализируем Ввод, составляем Списки */
 
 			obj = obj.inputAnalyse(manager);
 
