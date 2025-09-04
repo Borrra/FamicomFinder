@@ -40,7 +40,7 @@ public class ServiceMethods {
 	 * 11. informWindow();
 	 * 12. List<String> getFieldListNew(List<GameClass> objects, String fieldName);
 	 * 13. boolean isStarCodeOk(String k);
-	 * 14. int yesNoWindow(); */
+	 * 14. int yesNoWindow(String k); */
 
 	// 1. Метод выводит в Окно передаваюмую ему Строку
 

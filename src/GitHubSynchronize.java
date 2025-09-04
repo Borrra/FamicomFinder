@@ -1,4 +1,4 @@
-import java.awt.Dimension;
+//import java.awt.Dimension;
 import java.awt.Frame;
 import javax.swing.SwingUtilities;
 import java.io.BufferedReader;
@@ -614,7 +614,7 @@ public class GitHubSynchronize {
 				
 			ServiceMethods.windowShoww(arr, "Папки с расхождениями: ");
 
-			if (ServiceMethods.yesNoWindow("Обновляем папку с фотками (Yes) или оставляем как есть (No)")==0) {
+			//if (ServiceMethods.yesNoWindow("Обновляем папку с фотками (Yes) или оставляем как есть (No)")==0) {
 				
 				consoleWindow.startWindow("Скачиваем файлы:"); // открытие окна-консоли
 				
@@ -632,10 +632,10 @@ public class GitHubSynchronize {
 			
 			//////////////////////////////////////////////////////////////////
 			
-			} else {
+			//} else {
 				
 				//ServiceMethods.windowShow("Оставляем папку с фотками как есть");
-			}
+			//}
 	
 			/* здесь нужно добавить слеш, так как он нужен в Менеджере,
 			 * без него фотки не будут показываться (путь неправильный) */

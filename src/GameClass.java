@@ -1,15 +1,15 @@
 
-import java.util.*;
+//import java.util.*;
 import java.awt.*;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.List;
+//import java.util.List;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.event.*;
+//import javax.swing.event.*;
 
 /* Класс в котором расположено описание Полей Игры, т.е. Поля и Конструкторы по формированию
  * наший Объектов (Игр) а также Методы по обработке наших Объектов. Это и Поиск и Сортировка,
